@@ -3,8 +3,6 @@
 {
   imports = [ ./paranoid.nix ./users.nix ];
 
-  phenix.paranoid.enable = true;
-
   nix = {
     autoOptimiseStore = true;
     package = pkgs.nixFlakes;

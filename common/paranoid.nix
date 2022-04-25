@@ -24,13 +24,14 @@ in {
     fileSystems."/var/log".options = ifNoexec;
 
     fileSystems."/boot" = {
-      device = "/dev/disk/by-label/boot";
+      device = "/dev/disk/by-label/ESP";
       fsType = "vfat";
     };
 
     fileSystems."/nix" = {
       device = "/dev/disk/by-label/nix";
       autoResize = true;
+      neededForBoot = true;
       fsType = "ext4";
     };
 
