@@ -78,6 +78,9 @@
 
 , # Additional store paths to copy to the image's store.
   additionalPaths ? []
+
+, # Set VM memSize.
+  memSize ? 1024
 }:
 
 assert partitionTableType == "legacy" || partitionTableType == "legacy+gpt" || partitionTableType == "efi" || partitionTableType == "hybrid" || partitionTableType == "none";
@@ -373,7 +376,7 @@ let format' = format; in let
       preVM = prepareImage;
       buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools ];
       postVM = moveOrConvertImage + postVM;
-      memSize = 1024;
+      memSize = memSize;
     } ''
       export PATH=${binPath}:$PATH
 

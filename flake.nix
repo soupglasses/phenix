@@ -23,18 +23,22 @@
         };
       };
 
+
+
       packages.${system} = {
-        base = import "./images/make-image.nix" {
+        base = import ./lib/make-disk-image.nix {
           pkgs = nixpkgs.legacyPackages.${system};
           lib = nixpkgs.lib;
           config = (nixpkgs.lib.nixosSystem {
             inherit system;
             modules = [
+              impermanence.nixosModules.impermanence
               ./images/openstack.nix
             ];
           }).config;
           format = "qcow2";
           diskSize = 8192;
+          memSize = 4096;
           name = "openstack";
         };
 
