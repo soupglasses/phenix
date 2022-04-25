@@ -18,7 +18,7 @@
 
 , # The initial NixOS configuration file to be copied to
   # /etc/nixos/configuration.nix.
-  configFile
+  configFile ? null
 
 , # Shell code executed after the VM has finished.
   postVM ? ""
@@ -154,17 +154,19 @@ let
       # Install a configuration.nix
      mkdir -p /mnt/etc/nixos
       # `cat` so it is mutable on the fs
-      cat ${configFile} > /mnt/etc/nixos/configuration.nix
+      ${lib.optionalString (configFile != null) ''
+        cat ${configFile} > /mnt/etc/nixos/configuration.nix
+      ''}
 
       export NIX_STATE_DIR=$TMPDIR/state
       nix-store --load-db < ${closureInfo}/registration
 
       echo copying toplevel
-      time nix copy --no-check-sigs --to 'local?root=/mnt/' ${config.system.build.toplevel}
+      time nix --extra-experimental-features nix-command copy --no-check-sigs --to 'local?root=/mnt/' ${config.system.build.toplevel}
 
       ${lib.optionalString includeChannel ''
         echo copying channels
-        time nix copy --no-check-sigs --to 'local?root=/mnt/' ${channelSources}
+        time nix --extra-experimental-features nix-command copy --no-check-sigs --to 'local?root=/mnt/' ${channelSources}
       ''}
 
       echo installing bootloader
