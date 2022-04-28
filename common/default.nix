@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./paranoid.nix ./users.nix ];
+  imports = [ ./users.nix ];
 
   nix = {
     autoOptimiseStore = true;

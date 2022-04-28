@@ -1,13 +1,12 @@
 {
   inputs = {
-    impermanence.url = "github:nix-community/impermanence";
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
     utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, impermanence, nixpkgs, nixos-generators, utils }:
+  outputs = { self, nixpkgs, nixos-generators, utils }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -16,44 +15,34 @@
         karius = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            impermanence.nixosModules.impermanence
-            ./common/hardware/openstack.nix
             ./common/default.nix
           ];
         };
       };
 
-
-
       packages.${system} = {
-        base = import ./lib/make-disk-image.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-          lib = nixpkgs.lib;
-          config = (nixpkgs.lib.nixosSystem {
-            inherit system;
-            modules = [
-              impermanence.nixosModules.impermanence
-              ./images/openstack.nix
-            ];
-          }).config;
-          format = "qcow2";
-          diskSize = 8192;
-          memSize = 4096;
-          name = "openstack";
-        };
-
-        openstack = nixos-generators.nixosGenerate {
-          pkgs = pkgs;
+        base = (nixpkgs.lib.nixosSystem {
+          inherit system pkgs;
           modules = [
-            impermanence.nixosModules.impermanence
+            "${nixpkgs}/nixos/maintainers/scripts/openstack/openstack-image.nix"
             ./common/default.nix
           ];
-          format = "iso";
+          }).config.system.build.openStackImage;
+
+        openstack = nixos-generators.nixosGenerate {
+          inherit pkgs;
+          modules = [
+            ./common/default.nix
+          ];
+          format = "openstack";
         };
       };
 
       devShell.${system} = pkgs.mkShell {
-        nativeBuildInputs = [ pkgs.bashInteractive ];
+        nativeBuildInputs = with pkgs; [
+          nixpkgs-fmt
+          nixUnstable
+        ];
         buildInputs = [ ];
       };
     };
