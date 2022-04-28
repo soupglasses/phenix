@@ -25,6 +25,7 @@
   environment.defaultPackages = lib.mkForce [];
 
   services.openssh = {
+    enable = true;
     passwordAuthentication = false;
     openFirewall = true;
     kbdInteractiveAuthentication = false;
