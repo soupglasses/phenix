@@ -40,7 +40,7 @@
   #];
 
   security.sudo.execWheelOnly = true;
-  environment.defaultPackages = lib.mkForce [];
+  environment.defaultPackages = lib.mkForce [ ];
 
   services.openssh = {
     enable = true;

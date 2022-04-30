@@ -21,7 +21,8 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
       lib = pkgs.lib;
-    in {
+    in
+    {
       nixosConfigurations = {
         nona = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -70,6 +71,7 @@
 
       # This is highly advised, and will prevent many possible mistakes
       checks = builtins.mapAttrs
-        (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+        (system: deployLib: deployLib.deployChecks self.deploy)
+        deploy-rs.lib;
     };
 }

@@ -30,7 +30,8 @@ let
       inherit keys;
     };
   };
-in {
+in
+{
   options.phenix.users = phenix.users;
 
   config.users.users = {
