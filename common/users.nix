@@ -38,4 +38,6 @@ in {
       keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvgn0kSAboULv37yLS1fGwByGSudhbQGrP/RrO7+cH+" ];
     };
   };
+
+  config.users.users.root.openssh.authorizedKeys.keys = config.users.users.sofi.openssh.authorizedKeys.keys;
 }
