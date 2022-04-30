@@ -19,24 +19,32 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
+      lib = pkgs.lib;
     in {
       nixosConfigurations = {
-        karius = nixpkgs.lib.nixosSystem {
+        nona = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
+            ./hardware/netcup.nix
             ./common/default.nix
           ];
         };
       };
 
-      packages.${system} = {
-        openstack = (nixpkgs.lib.nixosSystem {
-          inherit system pkgs;
-          modules = [
-            "${nixpkgs}/nixos/maintainers/scripts/openstack/openstack-image-zfs.nix"
-            ./common/default.nix
-          ];
-        }).config.system.build.openstackImage;
+      images = {
+        netcup = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
+          inherit pkgs lib;
+          config = (nixpkgs.lib.nixosSystem {
+            inherit system;
+            modules = [
+              "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+              ./hardware/netcup.nix
+              ./common/default.nix
+            ];
+          }).config;
+          format = "qcow2";
+          partitionTableType = "legacy";
+        };
       };
 
       devShell.${system} = pkgs.mkShell {
