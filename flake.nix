@@ -23,17 +23,6 @@
       lib = pkgs.lib;
     in
     {
-      nixosConfigurations = {
-        nona = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./common
-            ./hardware/qemu.nix
-            ./hosts/nona
-          ];
-        };
-      };
-
       images.${system} = {
         qemu = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
           inherit pkgs lib;
@@ -50,12 +39,15 @@
         };
       };
 
-      devShell.${system} = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [
-          nixpkgs-fmt
-          nixUnstable
-        ];
-        buildInputs = [ ];
+      nixosConfigurations = {
+        nona = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./common
+            ./hardware/qemu.nix
+            ./hosts/nona
+          ];
+        };
       };
 
       deploy.nodes.nona = {
@@ -67,6 +59,15 @@
           path = deploy-rs.lib.x86_64-linux.activate.nixos
             self.nixosConfigurations.nona;
         };
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        nativeBuildInputs = [
+          deploy-rs.defaultPackage.x86_64-linux
+          pkgs.nixpkgs-fmt
+          pkgs.nixUnstable
+        ];
+        buildInputs = [ ];
       };
 
       # This is highly advised, and will prevent many possible mistakes
