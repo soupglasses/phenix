@@ -1,9 +1,8 @@
 { config, pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [
-		htop
-    neofetch
-    neovim
+  imports = [
+    ../../common
+    ../../hardware/qemu.nix
   ];
 
   networking.hostName = "nona";

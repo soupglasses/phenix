@@ -43,8 +43,6 @@
         nona = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            ./common
-            ./hardware/qemu.nix
             ./hosts/nona
           ];
         };
