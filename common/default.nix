@@ -29,10 +29,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Etc/UTC";
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvgn0kSAboULv37yLS1fGwByGSudhbQGrP/RrO7+cH+"
-  ];
-
   #security.auditd.enable = true;
   #security.audit.enable = true;
   #security.audit.rules = [
@@ -40,12 +36,20 @@
   #];
 
   security.sudo.execWheelOnly = true;
+  security.sudo.extraRules = [{
+    groups = [ "wheel" ];
+    commands = [{
+      command = "ALL";
+      options = [ "NOPASSWD" ];
+    }];
+  }];
+
   environment.defaultPackages = lib.mkForce [ ];
 
   services.openssh = {
     enable = true;
     passwordAuthentication = false;
-    permitRootLogin = "no";
+    permitRootLogin = "prohibit-password";
     openFirewall = true;
     kbdInteractiveAuthentication = false;
     extraConfig = ''
@@ -60,5 +64,4 @@
   networking.firewall = {
     enable = true;
   };
-
 }

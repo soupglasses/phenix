@@ -23,9 +23,11 @@ in
     autoResize = true;
   };
 
+  users.users.root.initialPassword = mkDefault "phenix";
+
   services.openssh = {
     enable = true;
-    permitRootLogin = "prohibit-password";
+    permitRootLogin = mkDefault "prohibit-password";
     passwordAuthentication = mkDefault false;
   };
 

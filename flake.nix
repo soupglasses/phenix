@@ -34,8 +34,8 @@
         };
       };
 
-      images = {
-        netcup = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
+      images.${system} = {
+        qemu = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
           inherit pkgs lib;
           config = (nixpkgs.lib.nixosSystem {
             inherit system;
@@ -60,7 +60,7 @@
 
       deploy.nodes.nona = {
         hostname = "nona.box.byte.surf";
-        sshUser = "root";
+        sshUser = "sofi";
 
         profiles.system = {
           user = "root";
