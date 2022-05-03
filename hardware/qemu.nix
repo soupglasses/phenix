@@ -1,7 +1,4 @@
 { config, lib, modulesPath, pkgs, ... }:
-let
-  inherit (lib) mkDefault mkForce;
-in
 {
   imports = [
     # Optimizations related to QEMU trough virtio drivers.
@@ -23,17 +20,14 @@ in
     autoResize = true;
   };
 
-  users.users.root.initialPassword = mkDefault "phenix";
+  users.users.root.initialPassword = lib.mkDefault "phenix";
 
   services.openssh = {
     enable = true;
-    permitRootLogin = mkDefault "prohibit-password";
-    passwordAuthentication = mkDefault false;
+    permitRootLogin = "prohibit-password";
+    passwordAuthentication = false;
   };
 
-  # Allow communication from guest to host.
-  services.qemuGuest.enable = true;
-
   # Attempt to get hostname by DHCP.
-  networking.hostName = mkDefault "";
+  networking.hostName = lib.mkDefault "";
 }
