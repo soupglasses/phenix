@@ -19,7 +19,12 @@
   outputs = { self, nixpkgs, deploy-rs, utils, ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [
+          (final: prev: { deploy-rs = deploy-rs.defaultPackage.${prev.system}; })
+        ];
+      };
       lib = pkgs.lib;
     in
     {
@@ -61,7 +66,7 @@
 
       devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = [
-          deploy-rs.defaultPackage.x86_64-linux
+          pkgs.deploy-rs
           pkgs.nixpkgs-fmt
           pkgs.nixUnstable
         ];
