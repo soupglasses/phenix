@@ -36,7 +36,7 @@ in
 
   config.users.users = {
     sofi = mkUser {
-      keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvgn0kSAboULv37yLS1fGwByGSudhbQGrP/RrO7+cH+" ];
+      keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEflwI90G6tmsr4oI/UW6YNKh7OL0cv396DvdNht7von" ];
     };
   };
 
