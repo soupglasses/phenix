@@ -2,6 +2,10 @@
   description = "Phenix infrastructure";
 
   inputs = {
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
     nixpkgs.url = "nixpkgs/nixos-unstable";
     deploy-rs = {
       url = "github:serokell/deploy-rs";
@@ -9,14 +13,14 @@
       inputs.flake-compat.follows = "flake-compat";
       inputs.utils.follows = "utils";
     };
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, deploy-rs, utils, ... }@inputs:
+  outputs = { self, nixpkgs, deploy-rs, sops-nix, utils, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -28,6 +32,27 @@
       lib = pkgs.lib;
     in
     {
+      nixosConfigurations = {
+        nona = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/nona
+            sops-nix.nixosModules.sops
+          ];
+        };
+      };
+
+      deploy.nodes.nona = {
+        hostname = "nona.box.byte.surf";
+        sshUser = "sofi";
+
+        profiles.system = {
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos
+            self.nixosConfigurations.nona;
+        };
+      };
+
       images.${system} = {
         qemu = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
           inherit pkgs lib;
@@ -44,31 +69,17 @@
         };
       };
 
-      nixosConfigurations = {
-        nona = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/nona
-          ];
-        };
-      };
-
-      deploy.nodes.nona = {
-        hostname = "nona.box.byte.surf";
-        sshUser = "sofi";
-
-        profiles.system = {
-          user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos
-            self.nixosConfigurations.nona;
-        };
-      };
-
       devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = [
-          pkgs.deploy-rs
-          pkgs.nixpkgs-fmt
+          # Basic packages
           pkgs.nixUnstable
+          pkgs.nixpkgs-fmt
+          # deploy-rs related
+          pkgs.deploy-rs
+          # sops-nix related
+          pkgs.age
+          pkgs.ssh-to-age
+          pkgs.sops
         ];
         buildInputs = [ ];
       };
