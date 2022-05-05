@@ -17,11 +17,11 @@
   users.mutableUsers = lib.mkDefault true;
   users.users."root".password = lib.mkDefault "phenix";
 
-  security.auditd.enable = true;
-  security.audit.enable = true;
-  security.audit.rules = [
-    "-a exit,always -F arch=b64 -S execve"
-  ];
+  #security.auditd.enable = true;
+  #security.audit.enable = true;
+  #security.audit.rules = [
+  #  "-a exit,always -F arch=b64 -S execve"
+  #];
 
   security.sudo.execWheelOnly = true;
   security.sudo.extraRules = [{
