@@ -20,8 +20,6 @@
     autoResize = true;
   };
 
-  users.users.root.initialPassword = lib.mkDefault "phenix";
-
   services.openssh = {
     enable = true;
     permitRootLogin = "prohibit-password";

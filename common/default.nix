@@ -7,6 +7,16 @@
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Etc/UTC";
 
+  # NOTE: If you attempt to change the default password
+  # below, there is a bug where it may corrupt the /etc/shadow 
+  # file. See : https://github.com/NixOS/nixpkgs/issues/99433
+  # WORKAROUND: Enable mutableUsers, remove the root password 
+  # entry while logged in as root. Use `pwck -q` to fix any issues.
+  # Then attempt to disable mutableUsers when deploying the new
+  # password.
+  users.mutableUsers = lib.mkDefault true;
+  users.users."root".password = lib.mkDefault "phenix";
+
   security.auditd.enable = true;
   security.audit.enable = true;
   security.audit.rules = [

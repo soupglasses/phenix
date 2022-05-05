@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     # Server configuration
@@ -13,4 +13,12 @@
 
   networking.hostName = "nona";
   networking.domain = "box.byte.surf";
+
+  users.mutableUsers = false;
+  sops.secrets."root/password".neededForUsers = true;
+  users.users."root" = {
+    password = null; 
+    initialHashedPassword = null;
+    passwordFile = config.sops.secrets."root/password".path;
+  };
 }
