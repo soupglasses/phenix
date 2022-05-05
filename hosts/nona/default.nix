@@ -2,13 +2,13 @@
 {
   imports = [
     # Server configuration
-    ../../common
+    ../../common/default.nix
     ../../hardware/qemu.nix
     # Secret management
     ./sops.nix
     # Web services
-    ./nginx.nix
-    ./monitoring.nix
+    ./modules/nginx.nix
+    ./modules/monitoring/default.nix
   ];
 
   networking.hostName = "nona";

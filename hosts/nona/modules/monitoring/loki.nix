@@ -1,43 +1,5 @@
 { config, lib, pkgs, ... }:
 {
-  services.nginx = {
-    virtualHosts."byte.surf".locations = {
-      "/grafana/" = {
-        proxyPass = "http://${config.services.grafana.addr}:${toString config.services.grafana.port}/";
-        proxyWebsockets = true;
-      };
-    };
-  };
-
-  services.grafana = {
-    enable = true;
-    addr = "127.0.0.1";
-    port = 2342;
-    domain = "byte.surf";
-    rootUrl = "https://byte.surf/grafana/";
-  };
-
-  services.prometheus = {
-    enable = true;
-    port = 9001;
-    globalConfig.scrape_interval = "15s";
-    scrapeConfigs = [
-      {
-        job_name = "node";
-        static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
-        }];
-      }
-    ];
-    exporters = {
-      node = {
-        enable = true;
-        enabledCollectors = [ "systemd" ];
-        port = 9002;
-      };
-    };
-  };
-
   services.loki = {
     enable = true;
     configuration = {
@@ -99,31 +61,8 @@
     };
   };
 
-  systemd.services.loki.serviceConfig.CacheDirectory = "loki";
-  systemd.services.loki.serviceConfig.ReadWritePaths = "/var/cache/loki";
-
-  services.promtail = {
-    enable = true;
-    configuration = {
-      server.http_listen_port = 3101;
-      server.grpc_listen_port = 0;
-
-      clients = [
-        { url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push"; }
-      ];
-
-      scrape_configs = [{
-        job_name = "journal";
-        journal = {
-        #  json = true;
-          max_age = "12h";
-          labels.job = "systemd-journal";
-        };
-        relabel_configs = [{
-          source_labels = [ "__journal__systemd_unit" ];
-          target_label = "unit";
-        }];
-      }];
-    };
+  systemd.services.loki.serviceConfig = {
+    CacheDirectory = "loki";
+    ReadWritePaths = "/var/cache/loki";
   };
 }
