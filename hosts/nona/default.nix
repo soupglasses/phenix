@@ -6,9 +6,14 @@
     ../../hardware/qemu.nix
     # Secret management
     ./sops.nix
+    # Containers
+    ./modules/podman.nix
+    # Databases
+    ./modules/databases/postgres.nix
     # Web services
     ./modules/nginx.nix
     ./modules/monitoring/default.nix
+    ./modules/authentik.nix
   ];
 
   networking.hostName = "nona";
