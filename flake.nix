@@ -45,8 +45,6 @@
       deploy.nodes.nona = {
         hostname = "nona.box.byte.surf";
         sshUser = "sofi";
-        magicRollback = false;
-        autoRollback = false;
 
         profiles.system = {
           user = "root";
