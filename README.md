@@ -1,4 +1,4 @@
-![phenix logo](./media/phenix.png)
+[![phenix logo](./media/phenix.png)](https://www.youtube.com/watch?v=pDSptPcImGE)
 
 # Phenix
 
