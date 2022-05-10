@@ -1,4 +1,11 @@
-[![phenix logo](./media/phenix.png)](https://www.youtube.com/watch?v=pDSptPcImGE)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=pDSptPcImGE/#gh-light-mode-only">
+    <img src="/media/phenix-light.png" height="100"/>
+  </a>
+  <a href="https://www.youtube.com/watch?v=pDSptPcImGE/#gh-dark-mode-only">
+    <img src="/media/phenix-dark.png" height="100"/>
+  </a>
+</p>
 
 # Phenix
 
