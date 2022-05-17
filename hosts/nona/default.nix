@@ -5,10 +5,11 @@
     ../../common/default.nix
     ../../hardware/qemu.nix
     # Secret management
-    ./sops.nix
+    ./sops.nix                       
     # Web services
-    ./modules/nginx.nix
-    ./modules/monitoring/default.nix
+    ./modules/acme.nix
+    ./modules/nginx.nix               # requires: acme.nix
+    ./modules/monitoring/default.nix  # requires: nginx.nix
   ];
 
   networking.hostName = "nona";

@@ -10,8 +10,7 @@
     recommendedProxySettings = true;
 
     virtualHosts."byte.surf" = {
-      # TODO: Figure out a way to do this with useACMEhost.
-      enableACME = true;
+      useACMEHost = "byte.surf";
       forceSSL = true;
     };
   };
