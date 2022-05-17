@@ -5,7 +5,7 @@
     ../../common/default.nix
     ../../hardware/qemu.nix
     # Secret management
-    ./sops.nix                       
+    ./sops.nix
     # Web services
     ./modules/acme.nix
     ./modules/nginx.nix               # requires: acme.nix

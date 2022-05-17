@@ -1,8 +1,5 @@
 { config, lib, pkgs, ... }:
 {
-  security.acme.defaults.email = "sofi+admin@mailbox.org";
-  security.acme.acceptTerms = true;
-
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
