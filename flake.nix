@@ -2,25 +2,23 @@
   description = "Phenix infrastructure";
 
   inputs = {
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
     nixpkgs.url = "nixpkgs/nixos-unstable";
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-compat.follows = "flake-compat";
-      inputs.utils.follows = "utils";
+    };
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
     };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, deploy-rs, sops-nix, utils, ... }@inputs:
+  outputs = { self, nixpkgs, deploy-rs, sops-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
