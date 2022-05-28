@@ -14,6 +14,7 @@
   security.acme.certs."ldap.byte.surf".group = "openldap";
 
   security.dhparams.enable = true;
+  security.dhparams.params.nginx.bits = 1024;
   security.dhparams.params.openldap.bits = 1024;
 
   sops.secrets."acme/cloudflare_dns_api_key" = {
