@@ -11,7 +11,7 @@
 
   security.acme.certs."byte.surf".group = "nginx";
   security.acme.certs."watch.byte.surf".group = "nginx";
-  security.acme.certs."ldap.byte.surf".group = "nginx";
+  security.acme.certs."ldap.byte.surf".group = "openldap";
 
   sops.secrets."acme/cloudflare_dns_api_key" = {
     owner = config.users.users.acme.name;

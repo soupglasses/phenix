@@ -18,6 +18,10 @@
   networking.hostName = "nona";
   networking.domain = "box.byte.surf";
 
+  networking.extraHosts = ''
+    127.0.0.1 ldap.byte.surf
+  '';
+
   users.mutableUsers = false;
   sops.secrets."root/password".neededForUsers = true;
   users.users."root" = {

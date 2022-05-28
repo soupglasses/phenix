@@ -2,8 +2,16 @@
 {
   services.openldap = {
     enable = true;
+    urlList = [ "ldaps:///" ];
 
     settings.attrs = {
+      olcTLSCertificateFile = ''${config.security.acme.certs."ldap.byte.surf".directory}/cert.pem'';
+      olcTLSCertificateKeyFile = ''${config.security.acme.certs."ldap.byte.surf".directory}/key.pem'';
+      olcTLSCACertificateFile = ''${config.security.acme.certs."ldap.byte.surf".directory}/chain.pem'';
+      olcTLSCACertificatePath = "/etc/ssl/certs";
+      olcTLSCipherSuite = "HIGH:!NULL";
+      olcTLSVerifyClient = "never";
+
       #olcLogLevel = "acl trace";
       olcLogLevel = "-1";
       # TODO: Migrate away from SHA-512
