@@ -6,6 +6,8 @@
     ../../hardware/qemu.nix
     # Secret management
     ./sops.nix
+    # Auth mangement
+    ./modules/authentication
     # Web services
     ./modules/acme.nix
     ./modules/nginx.nix               # requires: acme.nix
@@ -22,4 +24,6 @@
     initialHashedPassword = null;
     passwordFile = config.sops.secrets."root/password".path;
   };
+
+  system.stateVersion = "22.05";
 }

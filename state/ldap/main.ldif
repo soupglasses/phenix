@@ -1,0 +1,5 @@
+dn: dc=byte,dc=surf
+objectClass: dcObject
+objectClass: organization
+o: Byte Surf
+dc: byte

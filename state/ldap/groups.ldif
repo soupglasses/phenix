@@ -1,0 +1,7 @@
+dn: ou=groups,dc=byte,dc=surf
+objectClass: organizationalUnit
+ou: groups
+
+dn: cn=admins,ou=groups,dc=byte,dc=surf
+objectClass: groupOfNames
+member: uid=sofi,ou=people,dc=byte,dc=surf

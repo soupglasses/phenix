@@ -1,0 +1,21 @@
+dn: ou=policies,dc=byte,dc=surf
+objectClass: organizationalUnit
+ou: policies
+
+dn: cn=default,ou=policies,dc=byte,dc=surf
+objectClass: pwdPolicy
+objectClass: namedPolicy
+objectClass: top
+cn: default
+pwdAttribute: userPassword
+pwdCheckQuality: 2
+pwdMinAge: 0
+pwdMaxAge: 0
+pwdMinLength: 12
+pwdInHistory: 5
+pwdLockout: TRUE
+pwdMaxFailure: 5
+pwdFailureCountInterval: 20
+pwdLockoutDuration: 60
+pwdMustChange: FALSE
+pwdSafeModify: FALSE
