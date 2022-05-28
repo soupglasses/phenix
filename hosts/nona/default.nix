@@ -12,6 +12,7 @@
     ./modules/acme.nix
     ./modules/nginx.nix               # requires: acme.nix
     ./modules/monitoring/default.nix  # requires: nginx.nix
+    ./modules/jellyfin.nix            # requires: acme.nix nginx.nix
   ];
 
   networking.hostName = "nona";
@@ -24,6 +25,10 @@
     initialHashedPassword = null;
     passwordFile = config.sops.secrets."root/password".path;
   };
+
+  environment.systemPackages = [
+    pkgs.rsync
+  ];
 
   system.stateVersion = "22.05";
 }

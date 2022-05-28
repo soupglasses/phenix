@@ -10,6 +10,7 @@
   };
 
   security.acme.certs."byte.surf".group = "nginx";
+  security.acme.certs."watch.byte.surf".group = "nginx";
   security.acme.certs."ldap.byte.surf".group = "nginx";
 
   sops.secrets."acme/cloudflare_dns_api_key" = {
