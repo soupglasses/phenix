@@ -26,7 +26,7 @@
       ];
 
       "olcDatabase={-1}frontend".attrs = {
-        objectClass = ["olcDatabaseConfig" "olcFrontendConfig"];
+        objectClass = [ "olcDatabaseConfig" "olcFrontendConfig" ];
         olcDatabase = "{-1}frontend";
         olcPasswordHash = "{ARGON2}";
         olcAccess = [
@@ -41,7 +41,7 @@
         olcAccess = [ "{0}to * by * none break" ];
       };
       "olcDatabase={1}mdb".attrs = {
-        objectClass = ["olcDatabaseConfig" "olcMdbConfig"];
+        objectClass = [ "olcDatabaseConfig" "olcMdbConfig" ];
         olcDatabase = "{1}mdb";
         olcDbDirectory = "/var/db/ldap";
         olcRootPW.path = config.sops.secrets."openldap/rootpw".path;
@@ -64,10 +64,10 @@
       "cn=module".attrs = {
         objectClass = "olcModuleList";
         cn = "module";
-        olcModuleLoad = ["ppolicy" "pw-argon2"];
+        olcModuleLoad = [ "ppolicy" "pw-argon2" ];
       };
       "olcOverlay=ppolicy,olcDatabase={1}mdb".attrs = {
-        objectClass = ["olcOverlayConfig" "olcPPolicyConfig"];
+        objectClass = [ "olcOverlayConfig" "olcPPolicyConfig" ];
         olcOverlay = "ppolicy";
         olcPPolicyDefault = "cn=default,ou=policies,dc=byte,dc=surf";
         olcPPolicyHashCleartext = "TRUE";
