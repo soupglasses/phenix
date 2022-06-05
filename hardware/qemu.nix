@@ -1,7 +1,7 @@
 { config, lib, modulesPath, pkgs, ... }:
 {
   imports = [
-    # Optimizations related to QEMU trough virtio drivers.
+    # Optimizations related to QEMU through virtio drivers.
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
