@@ -6,7 +6,7 @@
     ../../hardware/qemu.nix
     # Secret management
     ./sops.nix
-    # Auth mangement
+    # Auth management
     ./modules/authentication
     # Web services
     ./modules/acme.nix
