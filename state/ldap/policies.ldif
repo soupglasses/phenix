@@ -16,6 +16,6 @@ pwdInHistory: 5
 pwdLockout: TRUE
 pwdMaxFailure: 5
 pwdFailureCountInterval: 20
-pwdLockoutDuration: 60
+pwdLockoutDuration: 15
 pwdMustChange: FALSE
 pwdSafeModify: FALSE
