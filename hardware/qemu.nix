@@ -33,12 +33,6 @@
     autoResize = true;
   };
 
-  services.openssh = {
-    enable = true;
-    permitRootLogin = "prohibit-password";
-    passwordAuthentication = false;
-  };
-
   # Attempt to get hostname by DHCP.
   networking.hostName = lib.mkDefault "";
 }
