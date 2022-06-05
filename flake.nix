@@ -67,7 +67,11 @@
         nativeBuildInputs = [
           # Basic packages
           pkgs.nixUnstable
+          # Testing packages
+          pkgs.codespell
+          pkgs.editorconfig-checker
           pkgs.nixpkgs-fmt
+          pkgs.pre-commit
           # deploy-rs related
           pkgs.deploy-rs
           # sops-nix related
