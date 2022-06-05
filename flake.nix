@@ -3,11 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-compat.follows = "flake-compat";
-    };
+    deploy-rs.url = "github:serokell/deploy-rs";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -83,8 +79,6 @@
       };
 
       # This is highly advised, and will prevent many possible mistakes
-      checks = builtins.mapAttrs
-        (system: deployLib: deployLib.deployChecks self.deploy)
-        deploy-rs.lib;
+      checks.${system} = deploy-rs.lib.${system}.deployChecks self.deploy;
     };
 }
