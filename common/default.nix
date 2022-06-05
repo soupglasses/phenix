@@ -8,9 +8,9 @@
   time.timeZone = "Etc/UTC";
 
   # NOTE: If you attempt to change the default password
-  # below, there is a bug where it may corrupt the /etc/shadow 
+  # below, there is a bug where it may corrupt the /etc/shadow
   # file. See : https://github.com/NixOS/nixpkgs/issues/99433
-  # WORKAROUND: Enable mutableUsers, remove the root password 
+  # WORKAROUND: Enable mutableUsers, remove the root password
   # entry while logged in as root. Use `pwck -q` to fix any issues.
   # Then attempt to disable mutableUsers when deploying the new
   # password.

@@ -8,7 +8,7 @@
     useACMEHost = "watch.byte.surf";
     forceSSL = true;
 
-    # From: https://jellyfin.org/docs/general/networking/nginx.html 
+    # From: https://jellyfin.org/docs/general/networking/nginx.html
     locations = {
       "= /".extraConfig = ''
         return 302 https://$host/web/;
