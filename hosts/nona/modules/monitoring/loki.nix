@@ -38,7 +38,7 @@
         schema = "v11";
         index = { prefix = "index_"; period = "24h"; };
       }];
-      
+
       storage_config = {
         boltdb_shipper = {
           active_index_directory = "/var/lib/loki/boltdb";

@@ -13,7 +13,7 @@
       scrape_configs = [{
         job_name = "journal";
         journal = {
-        #  json = true;
+          # json = true;
           max_age = "12h";
           labels.job = "systemd-journal";
         };

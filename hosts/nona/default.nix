@@ -10,9 +10,9 @@
     ./modules/authentication
     # Web services
     ./modules/acme.nix
-    ./modules/nginx.nix               # requires: acme.nix
-    ./modules/monitoring/default.nix  # requires: nginx.nix
-    ./modules/jellyfin.nix            # requires: acme.nix nginx.nix
+    ./modules/nginx.nix # requires: acme.nix
+    ./modules/monitoring/default.nix # requires: nginx.nix
+    ./modules/jellyfin.nix # requires: acme.nix nginx.nix
   ];
 
   networking.hostName = "nona";
@@ -25,7 +25,7 @@
   users.mutableUsers = false;
   sops.secrets."root/password".neededForUsers = true;
   users.users."root" = {
-    password = null; 
+    password = null;
     initialHashedPassword = null;
     passwordFile = config.sops.secrets."root/password".path;
   };
