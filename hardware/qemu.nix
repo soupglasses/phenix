@@ -5,14 +5,27 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
-  # For SCSI CD ROM support
-  boot.initrd.availableKernelModules = [ "sr_mod" ];
-  # Stop the server from waiting for user input in a panic, just reboot.
+  boot.initrd.availableKernelModules = [
+    # Intel PATA/SATA controllers
+    "ata_piix"
+    # Universal Host Controller Interface
+    "uhci_hcd"
+    # Virtio Virtual PCI Device
+    "virtio_pci"
+    # Virtio SCSI HBA driver
+    "virtio_scsi"
+    # SCSI Disk Driver
+    "sd_mod"
+    # SCSI CD_ROM Driver
+    "sr_mod"
+  ];
+
+  # Just reboot when hitting a panic.
   boot.kernelParams = [ "panic=1" "boot.panic_on_fail" ];
 
   boot.loader.timeout = 1;
   boot.growPartition = true;
-  boot.loader.grub.device = "/dev/vda";
+  boot.loader.grub.device = "/dev/sda";
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
