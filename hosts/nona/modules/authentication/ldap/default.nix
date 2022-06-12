@@ -22,7 +22,6 @@
         "${pkgs.openldap}/etc/schema/core.ldif"
         "${pkgs.openldap}/etc/schema/cosine.ldif"
         "${pkgs.openldap}/etc/schema/inetorgperson.ldif"
-        "${pkgs.openldap}/etc/schema/ppolicy.ldif"
       ];
 
       "olcDatabase={-1}frontend".attrs = {
@@ -64,7 +63,7 @@
       "cn=module".attrs = {
         objectClass = "olcModuleList";
         cn = "module";
-        olcModuleLoad = [ "ppolicy" "pw-argon2" ];
+        olcModuleLoad = [ "ppolicy" "argon2" ];
       };
       "olcOverlay=ppolicy,olcDatabase={1}mdb".attrs = {
         objectClass = [ "olcOverlayConfig" "olcPPolicyConfig" ];
