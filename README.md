@@ -32,7 +32,7 @@ Packaging and dependency management: [nix-flakes](https://nixos.org/manual/nix/u
 ## Hosts
 
 ### [Nona](https://en.wikipedia.org/wiki/Nona_(mythology))
-- Name: Roman goddess of pregrancy, the life giver.
+- Name: Roman goddess of pregnancy, the life giver.
 - Use: General server, holds most core services.
 
 ### [Lumity](https://en.wikipedia.org/wiki/The_Owl_House#LGBTQ+_representation)
