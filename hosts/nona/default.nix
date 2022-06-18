@@ -4,8 +4,6 @@
     # Server configuration
     ../../common/default.nix
     ../../hardware/qemu.nix
-    # Secret management
-    ./sops.nix
     # Auth management
     ./modules/authentication
     # Web services
@@ -21,6 +19,9 @@
   networking.extraHosts = ''
     127.0.0.1 ldap.byte.surf
   '';
+
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  sops.defaultSopsFile = ./secrets/main.yaml;
 
   users.mutableUsers = false;
   sops.secrets."root/password".neededForUsers = true;
