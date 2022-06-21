@@ -6,6 +6,14 @@ on:
     branches: [main]
 
 jobs:
+  Linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: greut/eclint-action@v0.3.3
+
   Spelling:
     runs-on: ubuntu-latest
     steps:
@@ -15,15 +23,7 @@ jobs:
     - name: Check Spelling
       run: nix run nixpkgs#codespell .
 
-  Nix:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v17
-    - name: Check Formatting
-      run: nix run nixpkgs#nixpkgs-fmt -- --check .
-
-  Checks:
+  Tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -31,10 +31,10 @@ jobs:
     - name: Run Checks
       run: nix flake check --no-build --show-trace
 
-  EditorConfig:
+  Formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: greut/eclint-action@v0.3.3
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v17
+    - name: Check Formatting
+      run: nix run nixpkgs#nixpkgs-fmt -- --check .
