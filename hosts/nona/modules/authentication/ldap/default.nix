@@ -75,6 +75,9 @@
     };
   };
 
+  security.acme.certs."ldap.byte.surf".group = "openldap";
+  security.dhparams.params.openldap.bits = 1024;
+
   sops.secrets."openldap/rootpw" = {
     owner = "openldap";
     sopsFile = ../../../secrets/ldap.yaml;

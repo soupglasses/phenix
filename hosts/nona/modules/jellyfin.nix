@@ -4,6 +4,7 @@
     enable = true;
   };
 
+  security.acme.certs."watch.byte.surf".group = "nginx";
   services.nginx.virtualHosts."watch.byte.surf" = {
     useACMEHost = "watch.byte.surf";
     forceSSL = true;

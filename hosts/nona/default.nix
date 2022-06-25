@@ -4,13 +4,15 @@
     # Server configuration
     ../../common/default.nix
     ../../hardware/qemu.nix
+    # Base configuration
+    ./modules/base/acme.nix
+    ./modules/base/nginx.nix # requires: base/acme.nix
     # Auth management
-    ./modules/authentication
+    ./modules/authentication/ldap # requires: base/acme.nix
     # Web services
-    ./modules/acme.nix
-    ./modules/nginx.nix # requires: acme.nix
+    ./modules/nginx.nix # requires: base/acme.nix base/nginx.nix
     ./modules/monitoring/default.nix # requires: nginx.nix
-    ./modules/jellyfin.nix # requires: acme.nix nginx.nix
+    ./modules/jellyfin.nix # requires: base/acme.nix base/nginx.nix
   ];
 
   networking.hostName = "nona";
