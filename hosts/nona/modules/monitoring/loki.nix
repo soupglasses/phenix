@@ -3,9 +3,19 @@
   services.loki = {
     enable = true;
     configuration = {
+      target = "all";
       auth_enabled = false;
-      server.http_listen_port = 3100;
-      server.grpc_listen_port = 9095;
+      server = {
+        http_listen_port = 3100;
+        grpc_listen_port = 9095;
+
+        http_server_read_timeout = "60s"; # allow longer time span queries
+        http_server_write_timeout = "60s"; # allow longer time span queries
+        grpc_server_max_recv_msg_size = 33554432; # 32MiB (int bytes), default 4MB
+        grpc_server_max_send_msg_size = 33554432; # 32MiB (int bytes), default 4MB
+
+        log_level = "info";
+      };
 
       ingester = {
         lifecycler = {
@@ -58,6 +68,9 @@
 
       table_manager.retention_deletes_enabled = false;
       table_manager.retention_period = "0s";
+
+      query_range.parallelise_shardable_queries = false;
+      frontend.max_outstanding_per_tenant = 2048;
     };
   };
 

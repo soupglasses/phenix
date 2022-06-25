@@ -15,5 +15,8 @@
     port = 2342;
     domain = "byte.surf";
     rootUrl = "https://byte.surf/grafana/";
+    extraOptions = {
+      DATAPROXY_MAX_IDLE_CONNECTIONS = "100000";
+    };
   };
 }
