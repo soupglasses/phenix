@@ -19,6 +19,11 @@
     '';
   };
 
+  systemd.services.tt-rss = {
+    requires = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
+  };
+
   security.acme.certs."read.byte.surf".group = "nginx";
   services.nginx = {
     virtualHosts."read.byte.surf" = {
@@ -53,6 +58,7 @@
 
     database = {
       type = "pgsql";
+      createLocally = false;
       name = "tt_rss";
       user = "tt_rss";
       password = null;
