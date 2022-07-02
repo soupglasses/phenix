@@ -44,10 +44,11 @@
     ];
 
     plugins = [
+      "af_youtube_embed"
       "auth_internal"
       "auth_ldap"
       "note"
-      "updater"
+      "toggle_sidebar"
     ];
 
     database = {
