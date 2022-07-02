@@ -1,20 +1,16 @@
-dn: ou=people,dc=byte,dc=surf
+dn: ou=users,dc=byte,dc=surf
+ou: users
+description: Accounts for all users on the system.
 objectClass: organizationalUnit
-ou: people
 
-dn: uid=example,ou=people,dc=byte,dc=surf
+dn: uid=sofi,ou=users,dc=byte,dc=surf
+ou: users
+uid: sofi
+cn: sofi
+sn: ...
+displayName: Sofi
+mail: mail@example.com
+userPassword: secret
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-ou: people
-uid: example
-cn: Example User
-sn: User
-givenName: Example
-userPassword: testingpassword12345
-mail: mail@example.com
-
-# https://docs.oracle.com/cd/E19424-01/820-4811/baata/index.html
-# https://tobru.ch/openldap-password-policy-overlay/
-# https://www.zytrax.com/books/ldap/ch6/ppolicy.html#pwdpolicyattributes
-# https://tylersguides.com/guides/openldap-password-policy-overlay/

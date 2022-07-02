@@ -1,12 +1,11 @@
 dn: ou=policies,dc=byte,dc=surf
-objectClass: organizationalUnit
 ou: policies
+description: LDAP spessific policies.
+objectClass: organizationalUnit
 
-dn: cn=default,ou=policies,dc=byte,dc=surf
-objectClass: pwdPolicy
-objectClass: namedPolicy
-objectClass: top
-cn: default
+dn: cn=password,ou=policies,dc=byte,dc=surf
+cn: password
+ou: policies
 pwdAttribute: userPassword
 pwdCheckQuality: 2
 pwdMinAge: 0
@@ -19,3 +18,5 @@ pwdFailureCountInterval: 20
 pwdLockoutDuration: 15
 pwdMustChange: FALSE
 pwdSafeModify: FALSE
+objectClass: pwdPolicy
+objectClass: device

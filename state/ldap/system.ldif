@@ -1,0 +1,28 @@
+dn: ou=system,dc=byte,dc=surf
+ou: system
+description: Special accounts used by software applications.
+objectClass: organizationalUnit
+
+dn: uid=auth,ou=system,dc=byte,dc=surf
+uid: auth
+ou: system
+description: Authentication user for simple services
+userPassword: secret
+objectClass: account
+objectClass: simpleSecurityObject
+
+dn: uid=ttrss,ou=system,dc=byte,dc=surf
+uid: ttrss
+ou: system
+description: Service user for the Tiny-Tiny-RSS service
+userPassword: secret
+objectClass: account
+objectClass: simpleSecurityObject
+
+dn: uid=jellyfin,ou=system,dc=byte,dc=surf
+uid: jellyfin
+ou: system
+description: Service user for the Jellyfin service
+userPassword: secret
+objectClass: account
+objectClass: simpleSecurityObject

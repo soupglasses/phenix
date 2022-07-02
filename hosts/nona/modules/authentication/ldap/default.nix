@@ -29,9 +29,10 @@
         olcDatabase = "{-1}frontend";
         olcPasswordHash = "{ARGON2}";
         olcAccess = [
-          ''{0}to *
-               by dn.exact="cn=admins,ou=groups,dc=byte,dc=surf" manage stop
-               by * none stop''
+          # Give admins manage access.
+          ''{0}to dn.subtree="dc=byte,dc=surf"
+                by group/groupOfUniqueNames/uniqueMember="cn=admin,ou=groups,dc=byte,dc=surf" manage stop
+                by * none stop''
         ];
       };
       "olcDatabase={0}config".attrs = {
@@ -43,21 +44,44 @@
         objectClass = [ "olcDatabaseConfig" "olcMdbConfig" ];
         olcDatabase = "{1}mdb";
         olcDbDirectory = "/var/db/ldap";
-        olcRootPW.path = config.sops.secrets."openldap/rootpw".path;
+        olcRootPW.path = config.sops.secrets."ldap/root-password".path;
         olcRootDN = "cn=admin,dc=byte,dc=surf";
         olcSuffix = "dc=byte,dc=surf";
-        # TODO: Indexes
         olcAccess = [
-          ''{0}to attrs=userPassword
-               by self       write
-               by anonymous  auth
-               by group.exact="cn=admins,ou=groups,dc=byte,dc=surf"
-                             write
-               by *          none''
-          ''{1}to *
-               by self     write
-               by users    read
-               by *        none''
+          # Restrict access by IP addresses.
+          ''{0}to *
+                by peername.ip=127.0.0.1 none break''
+          # Give admins write access.
+          ''{1}to dn.subtree="dc=byte,dc=surf"
+                by group/groupOfUniqueNames/uniqueMember="cn=admin,ou=groups,dc=byte,dc=surf" write
+                by * none break''
+          # Only grant password access for auth, and only allow users to change their own.
+          ''{2}to attrs=userPassword
+                by anonymous auth
+                by self write''
+          # Do not let anyone modify their own uid as they are used for the DN.
+          # Also allow anonymous to read uid's for login.
+          ''{3}to attrs=uid
+                by anonymous read
+                by users read''
+          # Do not let anyone modify OUs, they are used for the DN.
+          ''{4}to attrs=ou
+                by users read''
+          # Stop the authentication account from reading anything else.
+          # This also stops anonymous.
+          ''{5}to *
+                by dn.exact="uid=auth,ou=system,dc=byte,dc=surf"
+                  none
+                by users none break''
+          # Prevent DNs in ou=users from reading system accounts
+          ''{6}to dn.subtree="ou=system,dc=byte,dc=surf"
+                by dn.subtree="ou=users,dc=byte,dc=surf" none
+                by users read''
+          # Default rule: Allow DNs to modify their own records,
+          # and read access to everyone else.
+          ''{7}to *
+                by self write
+                by users read''
         ];
       };
       "cn=module".attrs = {
@@ -68,7 +92,7 @@
       "olcOverlay=ppolicy,olcDatabase={1}mdb".attrs = {
         objectClass = [ "olcOverlayConfig" "olcPPolicyConfig" ];
         olcOverlay = "ppolicy";
-        olcPPolicyDefault = "cn=default,ou=policies,dc=byte,dc=surf";
+        olcPPolicyDefault = "cn=password,ou=policies,dc=byte,dc=surf";
         olcPPolicyHashCleartext = "TRUE";
         olcPPolicyUseLockout = "TRUE";
       };
@@ -78,7 +102,7 @@
   security.acme.certs."ldap.byte.surf".group = "openldap";
   security.dhparams.params.openldap.bits = 1024;
 
-  sops.secrets."openldap/rootpw" = {
+  sops.secrets."ldap/root-password" = {
     owner = "openldap";
     sopsFile = ../../../secrets/ldap.yaml;
   };

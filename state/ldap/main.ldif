@@ -1,5 +1,6 @@
 dn: dc=byte,dc=surf
+description: Byte Surf
+dc: byte
+o: byte.surf
 objectClass: dcObject
 objectClass: organization
-o: Byte Surf
-dc: byte

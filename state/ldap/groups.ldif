@@ -1,7 +1,11 @@
 dn: ou=groups,dc=byte,dc=surf
-objectClass: organizationalUnit
 ou: groups
+description: Location for all dynamic groups.
+objectClass: organizationalUnit
 
-dn: cn=admins,ou=groups,dc=byte,dc=surf
-objectClass: groupOfNames
-member: uid=sofi,ou=people,dc=byte,dc=surf
+dn: cn=admin,ou=groups,dc=byte,dc=surf
+cn: admin
+ou: groups
+description: LDAP administators group
+uniqueMember: uid=sofi,ou=users,dc=byte,dc=surf
+objectClass: groupOfUniqueNames
