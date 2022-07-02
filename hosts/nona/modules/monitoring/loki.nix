@@ -14,7 +14,7 @@
         grpc_server_max_recv_msg_size = 33554432; # 32MiB (int bytes), default 4MB
         grpc_server_max_send_msg_size = 33554432; # 32MiB (int bytes), default 4MB
 
-        log_level = "info";
+        log_level = "warn";
       };
 
       ingester = {
