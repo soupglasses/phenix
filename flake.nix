@@ -2,7 +2,8 @@
   description = "Phenix infrastructure";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    #nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:imsofi/nixpkgs/master";
     deploy-rs.url = "github:serokell/deploy-rs";
     flake-compat = {
       url = "github:edolstra/flake-compat";

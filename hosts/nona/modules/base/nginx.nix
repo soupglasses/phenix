@@ -1,5 +1,9 @@
 { config, lib, pkgs, ... }:
 {
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+
+  security.dhparams.params.nginx.bits = 1024;
+
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
@@ -54,8 +58,4 @@
       access_log /var/log/nginx/json_access.log json_analytics;
     '';
   };
-
-  security.dhparams.params.nginx.bits = 1024;
-
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
 }

@@ -7,11 +7,13 @@
     # Base configuration
     ./modules/base/acme.nix
     ./modules/base/nginx.nix # requires: base/acme.nix
+    ./modules/base/postgresql.nix
     # Auth management
     ./modules/authentication/ldap # requires: base/acme.nix
     # Web services
     ./modules/nginx.nix # requires: base/acme.nix base/nginx.nix
     ./modules/monitoring/default.nix # requires: nginx.nix
+    ./modules/ttrss.nix # requires: base/acme.nix base/nginx.nix base/postgresql.nix
     ./modules/jellyfin.nix # requires: base/acme.nix base/nginx.nix
   ];
 
