@@ -2,8 +2,7 @@
   description = "Phenix infrastructure";
 
   inputs = {
-    #nixpkgs.url = "nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:imsofi/nixpkgs/master";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
     deploy-rs.url = "github:serokell/deploy-rs";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -21,15 +20,20 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          (final: prev: { deploy-rs = deploy-rs.defaultPackage.${prev.system}; })
+          self.overlays.tt-rss-plugin-auth-ldap
         ];
       };
       lib = pkgs.lib;
     in
     {
+      overlays = {
+        tt-rss-plugin-auth-ldap = import ./overlays/tt-rss-plugin-auth-ldap.nix;
+      };
+
       nixosConfigurations = {
         nona = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          inherit pkgs;
           modules = [
             ./hosts/nona
             sops-nix.nixosModules.sops
@@ -74,7 +78,7 @@
           pkgs.nixpkgs-fmt
           pkgs.pre-commit
           # deploy-rs related
-          pkgs.deploy-rs
+          deploy-rs.defaultPackage.${system}
           # sops-nix related
           pkgs.age
           pkgs.ssh-to-age
