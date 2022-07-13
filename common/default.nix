@@ -83,5 +83,6 @@
 
   networking.firewall = {
     enable = lib.mkDefault true;
+    logRefusedConnections = false;
   };
 }

@@ -4,26 +4,21 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     deploy-rs.url = "github:serokell/deploy-rs";
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
+    nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, deploy-rs, sops-nix, ... }@inputs:
+  outputs = { self, nixpkgs, deploy-rs, sops-nix, nix-minecraft, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          self.overlays.tt-rss-plugin-auth-ldap
-        ];
+      commonModule = {
+        # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
+        _file = ./flake.nix;
+        config = {
+          nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays;
+        };
       };
-      lib = pkgs.lib;
     in
     {
       overlays = {
@@ -31,10 +26,11 @@
       };
 
       nixosConfigurations = {
-        nona = nixpkgs.lib.nixosSystem {
+        nona = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
-          inherit pkgs;
+          specialArgs = { inherit system inputs; };
           modules = [
+            commonModule
             ./hosts/nona
             sops-nix.nixosModules.sops
           ];
@@ -52,12 +48,13 @@
         };
       };
 
-      images.${system} = {
+      images.x86_64-linux = {
         qemu = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
-          inherit pkgs lib;
+          system = "x86_64-linux";
           config = (nixpkgs.lib.nixosSystem {
-            inherit system;
+            system = "x86_64-linux";
             modules = [
+              commonModule
               "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
               ./common
               ./hardware/qemu.nix
@@ -68,26 +65,26 @@
         };
       };
 
-      devShells.${system}.default = pkgs.mkShell {
+      devShells.x86_64-linux.default = with nixpkgs.legacyPackages.x86_64-linux; (mkShell {
         nativeBuildInputs = [
           # Basic packages
-          pkgs.nixUnstable
+          nixUnstable
           # Testing packages
-          pkgs.codespell
-          pkgs.editorconfig-checker
-          pkgs.nixpkgs-fmt
-          pkgs.pre-commit
+          codespell
+          editorconfig-checker
+          nixpkgs-fmt
+          pre-commit
           # deploy-rs related
           deploy-rs.defaultPackage.${system}
           # sops-nix related
-          pkgs.age
-          pkgs.ssh-to-age
-          pkgs.sops
+          age
+          ssh-to-age
+          sops
         ];
         buildInputs = [ ];
-      };
+      });
 
       # This is highly advised, and will prevent many possible mistakes
-      checks.${system} = deploy-rs.lib.${system}.deployChecks self.deploy;
+      checks.x86_64-linux = deploy-rs.lib.x86_64-linux.deployChecks self.deploy;
     };
 }
