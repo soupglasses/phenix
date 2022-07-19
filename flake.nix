@@ -25,11 +25,16 @@
         tt-rss-plugin-auth-ldap = import ./overlays/tt-rss-plugin-auth-ldap.nix;
       };
 
+      nixosModules = {
+        minecraft-server = import ./modules/minecraft-server.nix;
+      };
+
       nixosConfigurations = {
         nona = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
           specialArgs = { inherit system inputs; };
           modules = [
+            self.nixosModules.minecraft-server
             commonModule
             ./hosts/nona
             sops-nix.nixosModules.sops
