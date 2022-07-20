@@ -214,10 +214,6 @@ in
         User = "minecraft";
         WorkingDirectory = cfg.dataDir;
 
-        KillSignal = "SIGCONT";
-        TimeoutStopSec = "120s";
-        RestartSec = "15s";
-
         # Sockets
         StandardInput = "socket";
         StandardOutput = "journal";
