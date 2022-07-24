@@ -76,7 +76,7 @@
 
       define('LDAP_AUTH_LOGIN_ATTRIB', 'uid');
       // ??? will be replaced with the entered username(escaped) at login
-      define('LDAP_AUTH_SEARCHFILTER', '(&(objectClass=inetOrgPerson)(uid=???))');
+      define('LDAP_AUTH_SEARCHFILTER', '(&(|(objectClass=inetOrgPerson))(|(uid=???)(|(mail=???))))');
 
       // For when things start to go wrong
       define('LDAP_AUTH_LOG_ATTEMPTS', FALSE);
