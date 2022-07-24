@@ -62,7 +62,7 @@
               commonModule
               "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
               ./common
-              ./hardware/qemu.nix
+              ./common/hardware/qemu.nix
             ];
           }).config;
           format = "qcow2";

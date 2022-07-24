@@ -3,7 +3,7 @@
   imports = [
     # Server configuration
     ../../common/default.nix
-    ../../hardware/qemu.nix
+    ../../common/hardware/qemu.nix
     # Base configuration
     ./modules/base/acme.nix
     ./modules/base/nginx.nix # requires: base/acme.nix
