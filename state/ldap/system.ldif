@@ -26,3 +26,11 @@ description: Service user for the Jellyfin service
 userPassword: secret
 objectClass: account
 objectClass: simpleSecurityObject
+
+dn: uid=nextcloud,ou=system,dc=byte,dc=surf
+uid: nextcloud
+ou: system
+description: Service user for the Nextcloud service
+userPassword: secret
+objectClass: account
+objectClass: simpleSecurityObject

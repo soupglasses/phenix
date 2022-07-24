@@ -15,6 +15,7 @@
     ./modules/monitoring/default.nix # requires: nginx.nix
     ./modules/ttrss.nix # requires: base/acme.nix base/nginx.nix base/postgresql.nix
     ./modules/jellyfin.nix # requires: base/acme.nix base/nginx.nix
+    ./modules/nextcloud.nix # requires: base/acme.nix base/nginx.nix base/postgresql.nix
     # Game servers
     ./modules/minecraft.nix
   ];
