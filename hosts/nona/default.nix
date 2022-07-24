@@ -20,7 +20,7 @@
   ];
 
   networking.hostName = "nona";
-  networking.domain = "box.byte.surf";
+  networking.domain = "hosts.byte.surf";
 
   networking.extraHosts = ''
     127.0.0.1 ldap.byte.surf

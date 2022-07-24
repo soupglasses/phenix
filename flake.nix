@@ -43,7 +43,7 @@
       };
 
       deploy.nodes.nona = {
-        hostname = "nona.box.byte.surf";
+        hostname = "nona.hosts.byte.surf";
         sshUser = "sofi";
 
         profiles.system = {
