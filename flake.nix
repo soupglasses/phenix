@@ -70,24 +70,24 @@
         };
       };
 
-      devShells.x86_64-linux.default = with nixpkgs.legacyPackages.x86_64-linux; (mkShell {
-        nativeBuildInputs = [
-          # Basic packages
-          nixUnstable
-          # Testing packages
-          codespell
-          editorconfig-checker
-          nixpkgs-fmt
-          pre-commit
-          # deploy-rs related
-          deploy-rs.defaultPackage.${system}
-          # sops-nix related
-          age
-          ssh-to-age
-          sops
-        ];
-        buildInputs = [ ];
-      });
+      devShells.x86_64-linux.default =
+        let pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in (pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            # Basic packages
+            nixUnstable
+            pkgs.deploy-rs
+            # Testing packages
+            codespell
+            editorconfig-checker
+            nixpkgs-fmt
+            pre-commit
+            # sops-nix related
+            age
+            ssh-to-age
+            sops
+          ];
+        });
 
       # This is highly advised, and will prevent many possible mistakes
       checks.x86_64-linux = deploy-rs.lib.x86_64-linux.deployChecks self.deploy;
