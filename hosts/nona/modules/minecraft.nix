@@ -18,6 +18,7 @@
       echo "say Starting backup..." > /run/minecraft-server.stdin
       echo save-off > /run/minecraft-server.stdin
       echo save-all > /run/minecraft-server.stdin
+      sleep 5
     '';
     backupCleanupCommand = ''
       echo save-on > /run/minecraft-server.stdin
