@@ -14,7 +14,7 @@
       olcTLSProtocolMin = "3.3";
       olcTLSVerifyClient = "never";
 
-      olcLogLevel = "-1";
+      olcLogLevel = "stats acl filter conns";
     };
 
     settings.children = {
@@ -43,7 +43,7 @@
       "olcDatabase={1}mdb".attrs = {
         objectClass = [ "olcDatabaseConfig" "olcMdbConfig" ];
         olcDatabase = "{1}mdb";
-        olcDbDirectory = "/var/db/ldap";
+        olcDbDirectory = "/var/lib/openldap/db";
         olcRootPW.path = config.sops.secrets."ldap/root-password".path;
         olcRootDN = "cn=admin,dc=byte,dc=surf";
         olcSuffix = "dc=byte,dc=surf";
