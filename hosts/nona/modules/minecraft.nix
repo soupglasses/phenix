@@ -26,6 +26,12 @@
     '';
   };
 
+  systemd.services.restic-backups-minecraft = {
+    partOf = [ "minecraft-server.service" ];
+    requisite = [ "minecraft-server.service" ];
+    after = [ "minecraft-server.service" ];
+  };
+
   services.minecraft-server = {
     enable = true;
     declarative = false;

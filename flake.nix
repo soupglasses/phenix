@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-pr-restic-poststop.url = "github:otavio/nixpkgs/topic/use-postStop-for-restic";
     deploy-rs.url = "github:serokell/deploy-rs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -27,6 +28,10 @@
 
       nixosModules = {
         minecraft-server = import ./modules/minecraft-server.nix;
+        pr-restic-poststop = ({ pkgs, ... }: {
+          disabledModules = [ "services/backup/restic.nix" ];
+          imports = [ "${inputs.nixpkgs-pr-restic-poststop}/nixos/modules/services/backup/restic.nix" ];
+        });
       };
 
       nixosConfigurations = {
@@ -35,6 +40,7 @@
           specialArgs = { inherit system inputs; };
           modules = [
             self.nixosModules.minecraft-server
+            self.nixosModules.pr-restic-poststop
             commonModule
             ./hosts/nona
             sops-nix.nixosModules.sops
