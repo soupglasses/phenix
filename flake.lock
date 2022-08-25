@@ -36,39 +36,23 @@
         "type": "github"
       }
     },
-    "flake-utils": {
-      "locked": {
-        "lastModified": 1656928814,
-        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "nix-minecraft": {
       "inputs": {
-        "flake-utils": "flake-utils",
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "packwiz": "packwiz"
+        ]
       },
       "locked": {
-        "lastModified": 1661056704,
-        "narHash": "sha256-TJJdl6bmK4D5MJjGvGtnlX8Ab6n7m/O4lULppAuSQmE=",
-        "owner": "Infinidoge",
+        "lastModified": 1661412721,
+        "narHash": "sha256-JCmwmYYxA5m0IUqBLnjjFHXQHSmFrlygSXdPSI969hk=",
+        "owner": "imsofi",
         "repo": "nix-minecraft",
-        "rev": "b08a8a890f317e092e34b8f08a8a759960b41762",
+        "rev": "9bdd7c63f2aba35853a82259a8a07af6ae98206b",
         "type": "github"
       },
       "original": {
-        "owner": "Infinidoge",
+        "owner": "imsofi",
+        "ref": "develop",
         "repo": "nix-minecraft",
         "type": "github"
       }
@@ -107,33 +91,17 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1660908602,
-        "narHash": "sha256-SwZ85IPWvC4NxxFhWhRMTJpApSHbY1u4YK2UFWEBWvY=",
+        "lastModified": 1661328374,
+        "narHash": "sha256-GGMupfk/lGzPBQ/dRrcQEhiFZ0F5KPg0j5Q4Fb5coxc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "495b19d5b3e62b4ec7e846bdfb6ef3d9c3b83492",
+        "rev": "f034b5693a26625f56068af983ed7727a60b5f8b",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
         "ref": "nixos-unstable",
         "type": "indirect"
-      }
-    },
-    "packwiz": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1655740746,
-        "narHash": "sha256-3at3g5RhbH5dw643hXyseUk+aeiONpKFqP4WAFUc1Ps=",
-        "owner": "packwiz",
-        "repo": "packwiz",
-        "rev": "0d8c1762a373f9da9b14cb4b8156082bbbe14de8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "packwiz",
-        "repo": "packwiz",
-        "type": "github"
       }
     },
     "root": {

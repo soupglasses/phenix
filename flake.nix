@@ -6,7 +6,7 @@
     deploy-rs.url = "github:serokell/deploy-rs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
+    nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -16,7 +16,10 @@
         # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
         _file = ./flake.nix;
         config = {
-          nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays;
+          nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays ++ [
+            nix-minecraft.overlays.default
+          ];
         };
       };
     in
