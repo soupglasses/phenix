@@ -32,15 +32,6 @@
     }];
   }];
 
-  environment.defaultPackages = lib.mkForce [ ];
-  environment.systemPackages = with pkgs; [
-    comma
-    git
-    htop
-    neofetch
-    neovim
-  ];
-
   services.openssh = {
     enable = true;
     passwordAuthentication = false;
@@ -57,32 +48,81 @@
   };
 
   services.journald.extraConfig = ''
-    SystemMaxUse=100M
-    MaxFileSec=7day
+    SystemMaxUse=500M
   '';
+
+  nix = {
+    package = pkgs.nixUnstable;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+      builders-use-substitutes = true;
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "@wheel" ];
+      warn-dirty = false;
+
+      substituters = [ "https://nix-community.cachix.org" ];
+      trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+    };
+  };
+
+  networking.firewall = {
+    enable = true;
+    logRefusedConnections = false;
+  };
 
   services.resolved = {
     enable = true;
     dnssec = "false";
   };
 
-  nix = {
-    package = pkgs.nixUnstable;
-    gc = { automatic = true; dates = "weekly"; };
-    settings = {
-      substituters = [ "https://nix-community.cachix.org" ];
-      trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
-      trusted-users = [ "root" "@wheel" ];
-      auto-optimise-store = true;
-    };
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      warn-dirty = false
-    '';
-  };
+  environment.defaultPackages = lib.mkForce [ ];
+  environment.systemPackages = with pkgs; [
+    # Management
+    curl
+    fd
+    git
+    htop
+    neofetch
+    neovim
+    openssl
+    psmisc # provides: killall, pstree, etc.
+    ripgrep # provides: rg
+    rsync
+    tree
+    wget
 
-  networking.firewall = {
-    enable = lib.mkDefault true;
-    logRefusedConnections = false;
-  };
+    # Compression & De-compression
+    atool # provides: apack, aunpack, acat, etc.
+    bzip2
+    gnutar # provides: tar
+    gzip
+    lz4
+    lzip
+    p7zip # provides: 7z
+    xz
+    zip
+    unzip
+    zstd
+
+    # Data formatters
+    libxml2 # provides: xmllint
+    jq
+    yq
+
+    # Networking
+    iperf
+    nmap
+
+    # Hardware
+    ethtool
+    lshw
+    lsof
+    pciutils # provides: lspci
+    smartmontools # provides: smartctl, etc.
+    usbutils # provides: lsusb
+  ];
 }
