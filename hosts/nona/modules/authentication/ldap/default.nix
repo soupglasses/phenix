@@ -14,7 +14,7 @@
       olcTLSProtocolMin = "3.3";
       olcTLSVerifyClient = "never";
 
-      olcLogLevel = "stats acl filter conns";
+      olcLogLevel = "stats";
     };
 
     settings.children = {
