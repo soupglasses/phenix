@@ -32,6 +32,10 @@
         minecraft-server = import ./modules/minecraft-server.nix;
       };
 
+      packages."x86_64-linux" = let pkgs = nixpkgs.legacyPackages."x86_64-linux"; in {
+        tt-rss-plugin-fever = pkgs.callPackage ./pkgs/tt-rss-plugin-fever.nix { };
+      };
+
       nixosConfigurations = {
         nona = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
