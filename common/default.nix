@@ -59,11 +59,11 @@
       options = "--delete-older-than 30d";
     };
     settings = {
-      builders-use-substitutes = true;
+      allowed-users = [ "@wheel" ];
       experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "@wheel" ];
       warn-dirty = false;
 
+      builders-use-substitutes = true;
       substituters = [ "https://nix-community.cachix.org" ];
       trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
     };
