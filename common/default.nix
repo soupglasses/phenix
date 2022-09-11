@@ -60,6 +60,7 @@
     };
     settings = {
       allowed-users = [ "@wheel" ];
+      trusted-users = [ "@wheel" ]; # Needed because of: https://github.com/NixOS/nix/issues/2127
       experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
 
