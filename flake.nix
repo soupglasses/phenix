@@ -12,16 +12,15 @@
 
   outputs = { self, nixpkgs, deploy-rs, sops-nix, nix-minecraft, ... }@inputs:
     let
-      commonModule = {
-        # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
-        _file = ./flake.nix;
-        config = {
-          nixpkgs.config.allowUnfree = true;
-          nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays ++ [
-            nix-minecraft.overlays.default
-          ];
-        };
-      };
+      localPatches = [ ];
+      remotePatches = [
+        {
+          meta.description = "tt-rss-plugin-auth-ldap: fix ldaps connection issue";
+          url = "https://github.com/NixOS/nixpkgs/pull/179923.diff";
+          sha256 = "sha256-ugW6pbFp5M6EfKB9rmzEWKeEUr5ibs2891+flywVMmU=";
+        }
+      ];
+      my-nixpkgs = self.lib.patchChannel "x86_64-linux" nixpkgs localPatches remotePatches;
     in
     {
       overlays = {
@@ -36,15 +35,51 @@
         tt-rss-plugin-fever = pkgs.callPackage ./pkgs/tt-rss-plugin-fever.nix { };
       };
 
+      lib = {
+        # https://github.com/NixOS/nix/issues/3920#issuecomment-681187597
+        patchChannel = system: channel: localPatches: remotePatches:
+          if localPatches ++ remotePatches == [ ] then channel else
+          nixpkgs.legacyPackages.${system}.applyPatches {
+            name = "nixpkgs-patched";
+            src = channel;
+            patches = localPatches ++ map nixpkgs.legacyPackages.${system}.fetchpatch remotePatches;
+            postPatch = ''
+              patch=$(printf '%s\n' ${builtins.concatStringsSep " "
+                (localPatches ++ map (patch: patch.sha256) remotePatches)} |
+                sort | sha256sum | cut -c -7)
+              echo "+patch-$patch" > .version-suffix
+            '';
+          };
+
+        createMachineWith = channel: machineConfig:
+          import (channel + "/nixos/lib/eval-config.nix") {
+            system = if (machineConfig ? system) then machineConfig.system else channel.hostPlatform.system;
+            modules = machineConfig.modules ++ [
+              ({ pkgs, ... }: {
+                _module.args = { inherit inputs; } // (machineConfig.extraArgs or { });
+                system.nixos.versionSuffix = ".${
+                nixpkgs.lib.substring 0 8 (inputs.self.lastModifiedDate or inputs.self.lastModified)}.${
+                inputs.self.shortRev or "dirty"}";
+                system.nixos.revision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
+                #nix.registry.nixpkgs.flake = nixpkgs;
+                #nix.package = pkgs.nixFlakes;
+                #nix.extraOptions = "experimental-features = nix-command flakes";
+                nixpkgs.config.allowUnfree = true;
+                nixpkgs.overlays = (nixpkgs.lib.attrValues self.overlays) ++ machineConfig.overlays;
+                system.configurationRevision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
+              })
+            ];
+          };
+      };
+
       nixosConfigurations = {
-        nona = nixpkgs.lib.nixosSystem rec {
+        nona = self.lib.createMachineWith my-nixpkgs {
           system = "x86_64-linux";
-          specialArgs = { inherit system inputs; };
+          overlays = [ nix-minecraft.overlays.default ];
           modules = [
             self.nixosModules.minecraft-server
-            commonModule
-            ./hosts/nona
             sops-nix.nixosModules.sops
+            ./hosts/nona
           ];
         };
       };
@@ -66,7 +101,6 @@
           config = (nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = [
-              commonModule
               "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
               ./common
               ./common/hardware/qemu.nix
