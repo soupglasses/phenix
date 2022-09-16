@@ -52,21 +52,21 @@
           };
 
         createMachineWith = channel: machineConfig:
-          import (channel + "/nixos/lib/eval-config.nix") {
+          nixpkgs.lib.nixosSystem {
             system = if (machineConfig ? system) then machineConfig.system else channel.hostPlatform.system;
             modules = machineConfig.modules ++ [
               ({ pkgs, ... }: {
                 _module.args = { inherit inputs; } // (machineConfig.extraArgs or { });
-                system.nixos.versionSuffix = ".${
-                nixpkgs.lib.substring 0 8 (inputs.self.lastModifiedDate or inputs.self.lastModified)}.${
-                inputs.self.shortRev or "dirty"}";
-                system.nixos.revision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
+                #system.nixos.versionSuffix = ".${
+                #nixpkgs.lib.substring 0 8 (inputs.self.lastModifiedDate or inputs.self.lastModified)}.${
+                #inputs.self.shortRev or "dirty"}";
+                #system.nixos.revision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
                 #nix.registry.nixpkgs.flake = nixpkgs;
                 #nix.package = pkgs.nixFlakes;
                 #nix.extraOptions = "experimental-features = nix-command flakes";
                 nixpkgs.config.allowUnfree = true;
                 nixpkgs.overlays = (nixpkgs.lib.attrValues self.overlays) ++ machineConfig.overlays;
-                system.configurationRevision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
+                #system.configurationRevision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
               })
             ];
           };
