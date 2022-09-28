@@ -12,14 +12,23 @@
 
   outputs = { self, nixpkgs, deploy-rs, sops-nix, nix-minecraft, ... }@inputs:
     let
-      my-patches = [
-        {
-          meta.description = "matrix-synapse: 1.67.0 -> 1.68.0";
-          url = "https://github.com/NixOS/nixpkgs/pull/193200.diff";
-          sha256 = "sha256-bKmqe87hX1EhtmRqmqxyBoR4wIpwKg3fOrO+7ReZSzI=";
-        }
-      ];
-      my-nixpkgs = self.lib.patchChannel nixpkgs "x86_64-linux" my-patches;
+      commonModule = {
+        # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
+        _file = ./flake.nix;
+        config = {
+          nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays ++ [
+            nix-minecraft.overlays.default
+          ];
+          # Follow this git repo's hashes and last modified date for version suffixes, instead of
+          # using upstream nixpkgs.
+          system.nixos.versionSuffix = nixpkgs.lib.mkForce ".${
+            nixpkgs.lib.substring 0 8 (self.lastModifiedDate or self.lastModified)}.${
+            self.shortRev or "dirty"}";
+          # WORKAROUND: Nix struggles with revisions in dirty repos -> https://github.com/NixOS/nix/pull/5385
+          system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+        };
+      };
     in
     {
       overlays = {
@@ -34,65 +43,12 @@
         tt-rss-plugin-fever = pkgs.callPackage ./pkgs/tt-rss-plugin-fever.nix { };
       };
 
-      lib = {
-        # https://github.com/NixOS/nix/issues/3920#issuecomment-681187597
-        hashFileOrHashPatch = patch:
-          if builtins.typeOf patch == "path"
-          then builtins.hashFile "sha256" patch
-          else patch.sha256;
-        patchChannel = channel: system: patches:
-          if patches == [ ] then channel else
-          channel.legacyPackages.${system}.applyPatches {
-            name = "nixpkgs-patched";
-            src = channel;
-            patches = map
-              (p:
-                if builtins.typeOf p == "path"
-                then p
-                else nixpkgs.legacyPackages.${system}.fetchpatch p)
-              patches;
-            postPatch = ''
-              patch=$(printf '%s\n' ${builtins.concatStringsSep " "
-                (map self.lib.hashFileOrHashPatch patches)} |
-                sort | sha256sum | cut -c -7)
-              echo "+patch-$patch" > .version-suffix
-            '';
-          };
-
-        createMachineWith = channel: machineConfig:
-          nixpkgs.lib.nixosSystem rec {
-            system = machineConfig.system;
-            modules = machineConfig.modules ++ [
-              ({ pkgs, ... }: {
-                _module.args = { inherit system inputs; } // (machineConfig.extraArgs or { });
-                nixpkgs.pkgs = import channel ({ inherit system; }
-                  // (if (machineConfig ? nixpkgs) then machineConfig.nixpkgs else { }));
-                # Skip compiling nixos related docs, as patched nixpkgs makes this step excruciatingly slow.
-                documentation.nixos.enable = false;
-                nixpkgs.overlays =
-                  (if (self ? overlays) then nixpkgs.lib.attrValues self.overlays else [ ])
-                    ++ (if (machineConfig ? overlays) then machineConfig.overlays else [ ]);
-
-                system.nixos.versionSuffix = nixpkgs.lib.mkForce ".${
-                nixpkgs.lib.substring 0 8 (inputs.self.lastModifiedDate or inputs.self.lastModified)}.${
-                inputs.self.shortRev or "dirty"}";
-                #system.nixos.revision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
-                #nix.registry.nixpkgs.flake = nixpkgs;
-                #nix.package = pkgs.nixFlakes;
-                #nix.extraOptions = "experimental-features = nix-command flakes";
-                #system.configurationRevision = nixpkgs.lib.mkIf (inputs.self ? rev) inputs.self.rev;
-              })
-            ];
-          };
-      };
-
       nixosConfigurations = {
-        nona = self.lib.createMachineWith my-nixpkgs {
+        nona = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
-          nixpkgs = { config.allowUnfree = true; };
-          overlays = [ nix-minecraft.overlays.default ];
+          specialArgs = { inherit inputs system; };
           modules = [
-            self.nixosModules.minecraft-server
+            commonModule
             sops-nix.nixosModules.sops
             ./hosts/nona
           ];
