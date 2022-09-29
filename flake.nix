@@ -15,6 +15,9 @@
       commonModule = {
         # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
         _file = ./flake.nix;
+        imports = [
+          sops-nix.nixosModules.sops
+        ];
         config = {
           nixpkgs.config.allowUnfree = true;
           nixpkgs.overlays = nixpkgs.lib.attrValues self.overlays ++ [
@@ -49,7 +52,6 @@
           specialArgs = { inherit inputs system; };
           modules = [
             commonModule
-            sops-nix.nixosModules.sops
             ./hosts/nona
           ];
         };
