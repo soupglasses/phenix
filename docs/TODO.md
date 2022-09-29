@@ -11,13 +11,13 @@
 * Figure out a better way to handle requirements for base modules.
   * Furthermore, figure out a more general module system that could be portable between hosts.
 
+* Move package trust from ssh user to package signing.
+
 ## Backups
 * Use restic
   * /var/db/
   * /var/lib/jellyfin/
 
 # Services
-* Minecraft server
-* Authelia
-* Jellyfin
-* Nextcloud
+* Auth frontend to help change passwords etc. for end users.
+  * Authelia/Keycloack/Canaille?
