@@ -87,6 +87,7 @@
     fd
     git
     htop
+    moreutils # provides: vidir, etc.
     neofetch
     neovim
     openssl
