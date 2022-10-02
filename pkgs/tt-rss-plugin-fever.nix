@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "An open source plugin which simulates the Fever API";
-    licence = licences.gpl3;
+    license = licenses.gpl3;
     homepage = "https://github.com/DigitalDJ/tinytinyrss-fever-plugin";
     maintainers = with maintainers; [ imsofi ];
     platforms = platforms.all;
