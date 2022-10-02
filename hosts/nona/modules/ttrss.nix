@@ -46,12 +46,14 @@
 
     pluginPackages = [
       pkgs.tt-rss-plugin-auth-ldap
+      pkgs.tt-rss-plugin-fever
     ];
 
     plugins = [
       "af_youtube_embed"
       "auth_internal"
       "auth_ldap"
+      "fever"
       "note"
       "toggle_sidebar"
     ];

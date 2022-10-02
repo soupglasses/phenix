@@ -36,6 +36,9 @@
     {
       overlays = {
         #  tt-rss-plugin-auth-ldap = import ./overlays/tt-rss-plugin-auth-ldap.nix;
+        tt-rss-plugin-fever = (final: prev: {
+          tt-rss-plugin-fever = final.callPackage ./pkgs/tt-rss-plugin-fever.nix { };
+        });
       };
 
       nixosModules = {
