@@ -11,12 +11,10 @@
 
   services.grafana = {
     enable = true;
-    addr = "127.0.0.1";
-    port = 2342;
-    domain = "byte.surf";
-    rootUrl = "https://byte.surf/grafana/";
-    extraOptions = {
-      DATAPROXY_MAX_IDLE_CONNECTIONS = "100000";
-    };
+    settings.server.root_url = "https://byte.surf/grafana/";
+    settings.server.http_addr = "127.0.0.1";
+    settings.server.http_port = 2342;
+    settings.server.domain = "byte.surf";
+    # for systemd environment: "DATAPROXY_MAX_IDLE_CONNECTIONS=10000"
   };
 }
