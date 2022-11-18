@@ -142,8 +142,8 @@
       checks.${system} = let
         deploy-checks = deploy-rs.lib.${system}.deployChecks self.deploy;
       in {
-        deploy-activate = deploy-checks.activate;
-        deploy-schema = deploy-checks.schema;
+        deploy-activate = deploy-checks.deploy-activate;
+        deploy-schema = deploy-checks.deploy-schema;
 
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
