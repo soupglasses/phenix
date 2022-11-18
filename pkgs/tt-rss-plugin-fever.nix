@@ -15,8 +15,8 @@ stdenv.mkDerivation rec {
   };
 
   installPhase = ''
-      install -D init.php $out/fever/init.php
-      install -D index.php $out/fever/index.php
+    install -D init.php $out/fever/init.php
+    install -D index.php $out/fever/index.php
     install -D fever_api.php $out/fever/fever_api.php
   '';
 
