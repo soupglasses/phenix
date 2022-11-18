@@ -7,7 +7,9 @@
   services.nginx = {
     virtualHosts."byte.surf".locations = {
       "/grafana/" = {
-        proxyPass = "http://${config.services.grafana.addr}:${toString config.services.grafana.port}/";
+        proxyPass = "http://${
+          config.services.grafana.settings.server.http_addr
+        }:${toString config.services.grafana.settings.server.http_port}/";
         proxyWebsockets = true;
       };
     };
