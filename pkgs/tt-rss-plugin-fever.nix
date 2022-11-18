@@ -1,4 +1,8 @@
-{ lib, stdenv, fetchFromGitHub }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+}:
 stdenv.mkDerivation rec {
   pname = "tt-rss-plugin-fever";
   version = "2.3.0";
@@ -11,16 +15,16 @@ stdenv.mkDerivation rec {
   };
 
   installPhase = ''
-        install -D init.php $out/fever/init.php
-        install -D index.php $out/fever/index.php
-    		install -D fever_api.php $out/fever/fever_api.php
+      install -D init.php $out/fever/init.php
+      install -D index.php $out/fever/index.php
+    install -D fever_api.php $out/fever/fever_api.php
   '';
 
   meta = with lib; {
     description = "An open source plugin which simulates the Fever API";
     license = licenses.gpl3;
     homepage = "https://github.com/DigitalDJ/tinytinyrss-fever-plugin";
-    maintainers = with maintainers; [ imsofi ];
+    maintainers = with maintainers; [imsofi];
     platforms = platforms.all;
   };
 }

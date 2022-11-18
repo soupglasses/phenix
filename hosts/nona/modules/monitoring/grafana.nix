@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   services.nginx = {
     virtualHosts."byte.surf".locations = {
       "/grafana/" = {

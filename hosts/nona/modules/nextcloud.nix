@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   sops.secrets."nextcloud/admin-password" = {
     owner = "nextcloud";
     sopsFile = ../secrets/nextcloud.yaml;
@@ -11,13 +16,15 @@
   };
 
   services.postgresql = {
-    ensureDatabases = [ "nextcloud" ];
-    ensureUsers = [{
-      name = "nextcloud";
-      ensurePermissions = {
-        "DATABASE nextcloud" = "ALL PRIVILEGES";
-      };
-    }];
+    ensureDatabases = ["nextcloud"];
+    ensureUsers = [
+      {
+        name = "nextcloud";
+        ensurePermissions = {
+          "DATABASE nextcloud" = "ALL PRIVILEGES";
+        };
+      }
+    ];
     # type, database, user, [address], auth-method, [auth-options]
     authentication = ''
       local nextcloud nextcloud peer
@@ -25,8 +32,8 @@
   };
 
   systemd.services.nextcloud-setup = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
+    requires = ["postgresql.service"];
+    after = ["postgresql.service"];
   };
 
   security.acme.certs."cloud.byte.surf".group = "nginx";
@@ -40,7 +47,7 @@
     enable = true;
     hostName = "cloud.byte.surf";
     https = true;
-    phpExtraExtensions = all: [ all.ldap ];
+    phpExtraExtensions = all: [all.ldap];
     config = {
       dbtype = "pgsql";
       dbname = "nextcloud";

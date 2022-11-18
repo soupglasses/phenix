@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   services.loki = {
     enable = true;
     configuration = {
@@ -21,7 +25,7 @@
         lifecycler = {
           address = "127.0.0.1";
           ring = {
-            kvstore = { store = "inmemory"; };
+            kvstore = {store = "inmemory";};
             replication_factor = 1;
           };
           final_sleep = "0s";
@@ -37,17 +41,22 @@
         working_directory = "/var/lib/loki";
         shared_store = "filesystem";
         compactor_ring = {
-          kvstore = { store = "inmemory"; };
+          kvstore = {store = "inmemory";};
         };
       };
 
-      schema_config.configs = [{
-        from = "2020-05-15";
-        store = "boltdb-shipper";
-        object_store = "filesystem";
-        schema = "v11";
-        index = { prefix = "index_"; period = "24h"; };
-      }];
+      schema_config.configs = [
+        {
+          from = "2020-05-15";
+          store = "boltdb-shipper";
+          object_store = "filesystem";
+          schema = "v11";
+          index = {
+            prefix = "index_";
+            period = "24h";
+          };
+        }
+      ];
 
       storage_config = {
         boltdb_shipper = {

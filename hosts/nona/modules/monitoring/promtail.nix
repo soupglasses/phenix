@@ -1,7 +1,11 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   # TODO: Find a better way to access nginx log files.
-  users.users.promtail.extraGroups = [ "nginx" ];
+  users.users.promtail.extraGroups = ["nginx"];
 
   services.promtail = {
     enable = true;
@@ -12,7 +16,7 @@
       positions.filename = "/tmp/positions.yaml";
 
       clients = [
-        { url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push"; }
+        {url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";}
       ];
 
       scrape_configs = [
@@ -26,10 +30,12 @@
               host = "nona";
             };
           };
-          relabel_configs = [{
-            source_labels = [ "__journal__systemd_unit" ];
-            target_label = "unit";
-          }];
+          relabel_configs = [
+            {
+              source_labels = ["__journal__systemd_unit"];
+              target_label = "unit";
+            }
+          ];
         }
 
         # from: https://grafana.com/grafana/dashboards/12559
@@ -60,4 +66,3 @@
     };
   };
 }
-

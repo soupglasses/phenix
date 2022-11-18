@@ -1,6 +1,10 @@
-{ config, lib, pkgs, ... }:
 {
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  networking.firewall.allowedTCPPorts = [80 443];
 
   security.dhparams.params.nginx.bits = 1024;
 

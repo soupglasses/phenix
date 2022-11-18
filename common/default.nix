@@ -1,6 +1,10 @@
-{ config, lib, pkgs, ... }:
 {
-  imports = [ ./users.nix ];
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [./users.nix];
 
   boot.cleanTmpDir = true;
 
@@ -24,13 +28,17 @@
   #];
 
   security.sudo.execWheelOnly = true;
-  security.sudo.extraRules = [{
-    groups = [ "wheel" ];
-    commands = [{
-      command = "ALL";
-      options = [ "NOPASSWD" ];
-    }];
-  }];
+  security.sudo.extraRules = [
+    {
+      groups = ["wheel"];
+      commands = [
+        {
+          command = "ALL";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
 
   services.openssh = {
     enable = true;
@@ -59,14 +67,14 @@
       options = "--delete-older-than 30d";
     };
     settings = {
-      allowed-users = [ "@wheel" ];
-      trusted-users = [ "@wheel" ]; # Needed because of: https://github.com/NixOS/nix/issues/2127
-      experimental-features = [ "nix-command" "flakes" ];
+      allowed-users = ["@wheel"];
+      trusted-users = ["@wheel"]; # Needed because of: https://github.com/NixOS/nix/issues/2127
+      experimental-features = ["nix-command" "flakes"];
       warn-dirty = false;
 
       builders-use-substitutes = true;
-      substituters = [ "https://nix-community.cachix.org" ];
-      trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+      substituters = ["https://nix-community.cachix.org"];
+      trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
     };
   };
 
@@ -80,7 +88,7 @@
     dnssec = "false";
   };
 
-  environment.defaultPackages = lib.mkForce [ ];
+  environment.defaultPackages = lib.mkForce [];
   environment.systemPackages = with pkgs; [
     # Management
     curl

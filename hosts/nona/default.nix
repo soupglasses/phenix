@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     # Server configuration
     ../../common/default.nix
@@ -27,7 +31,7 @@
     127.0.0.1 ldap.byte.surf
   '';
 
-  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   sops.defaultSopsFile = ./secrets/main.yaml;
 
   users.mutableUsers = false;

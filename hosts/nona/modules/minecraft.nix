@@ -1,5 +1,10 @@
-{ config, pkgs, lib, inputs, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
   sops.secrets."restic/password".sopsFile = ../secrets/restic.yaml;
   sops.secrets."restic/environment".sopsFile = ../secrets/restic.yaml;
 
@@ -8,8 +13,8 @@
     passwordFile = config.sops.secrets."restic/password".path;
     environmentFile = config.sops.secrets."restic/environment".path;
     repository = "b2:imsofi-infra:minecraft";
-    paths = [ "/var/lib/minecraft" ];
-    pruneOpts = [ "--keep-daily 31" ];
+    paths = ["/var/lib/minecraft"];
+    pruneOpts = ["--keep-daily 31"];
     timerConfig = {
       OnCalendar = "06:30";
       RandomizedDelaySec = "30m";
@@ -27,9 +32,9 @@
   };
 
   systemd.services.restic-backups-minecraft = {
-    partOf = [ "minecraft-server.service" ];
-    requisite = [ "minecraft-server.service" ];
-    after = [ "minecraft-server.service" ];
+    partOf = ["minecraft-server.service"];
+    requisite = ["minecraft-server.service"];
+    after = ["minecraft-server.service"];
   };
 
   services.minecraft-server = {

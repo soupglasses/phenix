@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   services.postgresql = {
     enable = true;
     port = 5432;

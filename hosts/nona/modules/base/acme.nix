@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   security.acme.acceptTerms = true;
 
   security.acme.defaults = {

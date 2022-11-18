@@ -1,5 +1,10 @@
-{ config, lib, modulesPath, pkgs, ... }:
 {
+  config,
+  lib,
+  modulesPath,
+  pkgs,
+  ...
+}: {
   imports = [
     # Optimizations related to QEMU through virtio drivers.
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -21,7 +26,7 @@
   ];
 
   # Just reboot when hitting a panic.
-  boot.kernelParams = [ "panic=1" "boot.panic_on_fail" ];
+  boot.kernelParams = ["panic=1" "boot.panic_on_fail"];
 
   boot.loader.timeout = 1;
   boot.growPartition = true;

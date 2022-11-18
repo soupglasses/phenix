@@ -1,18 +1,23 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   sops.secrets."ttrss/ldap-password" = {
     owner = "tt_rss";
     sopsFile = ../secrets/ldap.yaml;
   };
 
   services.postgresql = {
-    ensureDatabases = [ "tt_rss" ];
-    ensureUsers = [{
-      name = "tt_rss";
-      ensurePermissions = {
-        "DATABASE tt_rss" = "ALL PRIVILEGES";
-      };
-    }];
+    ensureDatabases = ["tt_rss"];
+    ensureUsers = [
+      {
+        name = "tt_rss";
+        ensurePermissions = {
+          "DATABASE tt_rss" = "ALL PRIVILEGES";
+        };
+      }
+    ];
     # type, database, user, [address], auth-method, [auth-options]
     authentication = ''
       local tt_rss tt_rss peer
@@ -20,8 +25,8 @@
   };
 
   systemd.services.tt-rss = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
+    requires = ["postgresql.service"];
+    after = ["postgresql.service"];
   };
 
   security.acme.certs."read.byte.surf".group = "nginx";
