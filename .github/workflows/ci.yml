@@ -6,35 +6,10 @@ on:
     branches: [main]
 
 jobs:
-  Linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: greut/eclint-action@v0.3.3
-
-  Spelling:
+  Check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
-    - uses: codespell-project/codespell-problem-matcher@v1
-    - name: Check Spelling
-      run: nix run nixpkgs#codespell .
-
-  Tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
-    - name: Run Checks
-      run: nix flake check --no-build --show-trace
-
-  Formatting:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
-    - name: Check Formatting
-      run: nix run nixpkgs#nixpkgs-fmt -- --check .
+    - name: Check Validate
+      run: nix flake check --show-trace
