@@ -1,0 +1,5 @@
+# Run this command to always ignore formatting commits in `git blame`
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Formatted entire repository with Alejandra
+1e548d3cb460297a725ae11fbe4250ca396a86ce
