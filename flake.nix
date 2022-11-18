@@ -6,11 +6,12 @@
     deploy-rs.url = "github:serokell/deploy-rs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, deploy-rs, sops-nix, nix-minecraft, ... }@inputs:
+  outputs = { self, nixpkgs, deploy-rs, sops-nix, pre-commit-hooks, nix-minecraft, ... }@inputs:
     let
       commonModule = {
         # Helps error message know where this module is defined, avoiding `<unknown-file>` in errors.
@@ -90,15 +91,11 @@
       devShells.x86_64-linux.default =
         let pkgs = nixpkgs.legacyPackages.x86_64-linux;
         in (pkgs.mkShell {
+          inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
           nativeBuildInputs = with pkgs; [
             # Basic packages
             nixUnstable
             pkgs.deploy-rs
-            # Testing packages
-            codespell
-            editorconfig-checker
-            nixpkgs-fmt
-            pre-commit
             # sops-nix related
             age
             ssh-to-age
@@ -106,7 +103,34 @@
           ];
         });
 
-      # This is highly advised, and will prevent many possible mistakes
-      checks.x86_64-linux = deploy-rs.lib.x86_64-linux.deployChecks self.deploy;
+      checks.x86_64-linux =
+        let
+          # TODO: Redo this to allow for multi architecture checks.
+          deploy-checks = deploy-rs.lib.x86_64-linux.deployChecks self.deploy;
+        in
+        {
+          deploy-schema = deploy-checks.schema;
+          deploy-activate = deploy-checks.activate;
+
+          pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
+            src = ./.;
+            hooks = with nixpkgs.legacyPackages.x86_64-linux; {
+              nixpkgs-fmt.enable = true;
+              editorconfig-checker = {
+                enable = true;
+                name = "editorconfig-checker";
+                entry = "${pkgs.editorconfig-checker}/bin/editorconfig-checker";
+                language = "system";
+                types = [ "text" ];
+              };
+              codespell = {
+                name = "codespell";
+                language = "system";
+                entry = "${pkgs.codespell}/bin/codespell";
+                types = [ "text" ];
+              };
+            };
+          };
+        };
     };
 }
