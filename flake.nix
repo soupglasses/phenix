@@ -123,7 +123,7 @@
       # --- Development shell ---
 
       devShells.${system}.default = pkgs.mkShell {
-        inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
+        inherit (self.checks.${system}.pre-commit-check) shellHook;
         nativeBuildInputs = with pkgs; [
           # Basic Packages
           nixUnstable
