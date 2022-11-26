@@ -48,6 +48,7 @@
     hostName = "cloud.byte.surf";
     https = true;
     phpExtraExtensions = all: [all.ldap];
+    enableBrokenCiphersForSSE = false; # Use openssl 3
     config = {
       dbtype = "pgsql";
       dbname = "nextcloud";
