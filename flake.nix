@@ -149,13 +149,7 @@
           src = ./.;
           hooks = {
             alejandra.enable = true;
-            editorconfig-checker = {
-              enable = true;
-              name = "editorconfig-checker";
-              entry = "${pkgs.editorconfig-checker}/bin/editorconfig-checker";
-              language = "system";
-              types = ["text"];
-            };
+            editorconfig-checker.enable = true;
             codespell = {
               name = "codespell";
               language = "system";
