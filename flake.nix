@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     # Utils
-    deploy-rs.url = "github:serokell/deploy-rs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -16,7 +15,6 @@
   outputs = {
     self,
     nixpkgs,
-    deploy-rs,
     pre-commit-hooks,
     sops-nix,
     nix-minecraft,
@@ -75,6 +73,8 @@
         };
       };
 
+      lib.${system} = import ./lib pkgs;
+
       # --- Systems ---
 
       nixosConfigurations = {
@@ -95,7 +95,7 @@
         profiles.system = {
           user = "root";
           path =
-            deploy-rs.lib.x86_64-linux.activate.nixos
+            self.lib."x86_64-linux".deploy.activate.nixos
             self.nixosConfigurations.nona;
         };
       };
@@ -140,7 +140,7 @@
       # --- Tests ---
 
       checks.${system} = let
-        deploy-checks = deploy-rs.lib.${system}.deployChecks self.deploy;
+        deploy-checks = self.lib.${system}.deploy.deployChecks self.deploy;
       in {
         deploy-activate = deploy-checks.deploy-activate;
         deploy-schema = deploy-checks.deploy-schema;
