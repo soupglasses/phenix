@@ -151,6 +151,7 @@
             alejandra.enable = true;
             editorconfig-checker.enable = true;
             codespell = {
+              enable = true;
               name = "codespell";
               language = "system";
               entry = "${pkgs.codespell}/bin/codespell";
