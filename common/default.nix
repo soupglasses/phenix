@@ -42,17 +42,17 @@
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
-    permitRootLogin = "prohibit-password";
     openFirewall = true;
-    kbdInteractiveAuthentication = false;
-    extraConfig = ''
-      AllowTcpForwarding yes
-      X11Forwarding no
-      AllowAgentForwarding no
-      AllowStreamLocalForwarding no
-      AuthenticationMethods publickey
-    '';
+    settings = {
+      AllowAgentForwarding = false;
+      AllowStreamLocalForwarding = false;
+      AllowTcpForwarding = true;
+      AuthenticationMethods = "publickey";
+      KbdInteractiveAuthentication = false;
+      PasswordAuthentication = false;
+      PermitRootLogin = "prohibit-password";
+      X11Forwarding = false;
+    };
   };
 
   services.journald.extraConfig = ''
