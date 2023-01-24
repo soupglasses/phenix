@@ -1,4 +1,4 @@
-name: CI
+name: Check
 
 on:
   pull_request:
@@ -6,18 +6,18 @@ on:
     branches: [main]
 
 jobs:
-  Check:
+  "Nix-Flake":
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
-    - name: Check Validate
+    - name: Run nix flake check
       run: nix flake check --no-build --show-trace
 
-  Validate:
+  "Pre-Commit":
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
-    - name: Check Validate
+    - name: Run pre-commit-check
       run:  nix build .#checks.x86_64-linux.pre-commit-check --show-trace
