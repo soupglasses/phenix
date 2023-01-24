@@ -149,6 +149,7 @@
           src = ./.;
           hooks = {
             alejandra.enable = true;
+            deadnix.enable = true;
             editorconfig-checker.enable = true;
             codespell = {
               enable = true;
