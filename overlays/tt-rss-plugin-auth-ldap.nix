@@ -1,4 +1,4 @@
-final: prev: {
+_final: prev: {
   tt-rss-plugin-auth-ldap = prev.tt-rss-plugin-auth-ldap.overrideAttrs (old: rec {
     patches =
       old.patches

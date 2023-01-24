@@ -68,7 +68,7 @@
       };
 
       overlays = {
-        tt-rss-plugin-fever = final: prev: {
+        tt-rss-plugin-fever = final: _prev: {
           tt-rss-plugin-fever = final.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
         };
       };

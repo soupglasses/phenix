@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{...}: {
   services.nginx = {
     virtualHosts."byte.surf" = {
       useACMEHost = "byte.surf";

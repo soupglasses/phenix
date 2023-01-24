@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   # TODO: Find a better way to access nginx log files.
   users.users.promtail.extraGroups = ["nginx"];
 

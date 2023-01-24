@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   networking.firewall.allowedTCPPorts = [80 443];
 
   security.dhparams.params.nginx.bits = 1024;
