@@ -122,7 +122,7 @@
 
       # --- Development shell ---
 
-      devShells.${system}.default = pkgs.mkShell {
+      devShells.${system}.default = pkgs.mkShellNoCC {
         inherit (self.checks.${system}.pre-commit-check) shellHook;
         nativeBuildInputs = with pkgs; [
           # Basic Packages
