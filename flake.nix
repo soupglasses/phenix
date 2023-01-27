@@ -72,12 +72,18 @@
           tt-rss-plugin-fever = final.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
         };
         prometheus-systemd-exporter = _final: prev: {
-          prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_prev: {
-            version = "0.5.0-cpu_stat";
-            src = prev.fetchzip {
-              url = "https://github.com/pelov/systemd_exporter/archive/47d7e92ec34303a8da471fd1c26106f606e5a150.zip";
-              sha256 = "sha256-k1kkbZLzacbDnbX2YecNRr3w5iMxdkUPMigZqKQlJf8=";
-            };
+          prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
+            patches = [
+              # https://github.com/prometheus-community/systemd_exporter/pull/74
+              (prev.fetchpatch {
+                url = "https://github.com/prometheus-community/systemd_exporter/commit/0afc9bee009740825239df1e6ffa1713a57a5692.patch";
+                sha256 = "sha256-ClrV9ZOlRruYXaeQwhWc9h88LP3Rm33Jf/dvxbqRS2I=";
+              })
+              (prev.fetchpatch {
+                url = "https://github.com/prometheus-community/systemd_exporter/commit/47d7e92ec34303a8da471fd1c26106f606e5a150.patch";
+                sha256 = "sha256-Ox9IE8LeYBflitelyZr4Ih1zSt9ggjnogj6k0qI2kx4=";
+              })
+            ];
           });
         };
       };
