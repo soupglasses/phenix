@@ -12,12 +12,26 @@
           }
         ];
       }
+      {
+        job_name = "systemd";
+        static_configs = [
+          {
+            targets = ["127.0.0.1:${toString config.services.prometheus.exporters.systemd.port}"];
+          }
+        ];
+      }
     ];
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = ["systemd"];
         port = 9002;
+      };
+      systemd = {
+        enable = true;
+        port = 9558;
+        extraFlags = [
+          "--systemd.collector.unit-exclude='.*\\.mount'"
+        ];
       };
     };
   };

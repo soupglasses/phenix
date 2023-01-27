@@ -71,6 +71,15 @@
         tt-rss-plugin-fever = final: _prev: {
           tt-rss-plugin-fever = final.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
         };
+        prometheus-systemd-exporter = _final: prev: {
+          prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_prev: {
+            version = "0.5.0-cpu_stat";
+            src = prev.fetchzip {
+              url = "https://github.com/pelov/systemd_exporter/archive/47d7e92ec34303a8da471fd1c26106f606e5a150.zip";
+              sha256 = "sha256-k1kkbZLzacbDnbX2YecNRr3w5iMxdkUPMigZqKQlJf8=";
+            };
+          });
+        };
       };
 
       lib.${system} = import ./lib pkgs;
