@@ -9,7 +9,7 @@
 
 # Phenix
 
-[![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
+[![built with nix](https://img.shields.io/static/v1?logo=nixos&logoColor=white&label=&message=Built%20with%20Nix&color=41439a&style=flat-square)](https://builtwithnix.org)
 
 This repository contains the infrastructure as code for Phenix, my personal infrastructue.
 
