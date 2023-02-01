@@ -32,9 +32,10 @@ in {
       serviceConfig = {
         DynamicUser = true;
         Type = "notify";
-        NotifyAccess = "exec";
+        NotifyAccess = "all";
         Restart = "on-failure";
-        WatchdogSec = 15;
+        WatchdogSec = 20;
+        TimeoutStartSec = 5;
         ExecStart = ''
           ${pkgs.bash}/bin/bash -c '${pkgs.phenix.systemd-http-health-check}/bin/systemd_http_health_check "http://localhost:8080/health" \
           & exec ${cfg.package}/bin/bad-python-server'

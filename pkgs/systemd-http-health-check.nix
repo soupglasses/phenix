@@ -11,8 +11,8 @@ crystal.buildCrystalPackage rec {
   src = fetchFromGitHub {
     owner = "imsofi";
     repo = "systemd_http_health_check";
-    rev = "4eb910dfc5cf4e87f6efb064f1d66c0d10550f95";
-    hash = "sha256-MqbLQhWj+b04oDTZZoCYn1zwrLSdsrLB6wSF3Q7w4Ao=";
+    rev = "b607be2aa428c34d26d699765d47f728e47585c9";
+    hash = "sha256-6ohkrmrYTV6uJZxFmrd+M7BjyXmZ95/Z5jrNnJ+JNpI=";
   };
 
   format = "shards";
