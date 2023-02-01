@@ -10,6 +10,9 @@
     # Packages
     nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
+    # Compatibility
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.flake = false;
   };
 
   outputs = {
