@@ -68,6 +68,7 @@
 
       packages.${system} = {
         tt-rss-plugin-fever = pkgs.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
+        systemd-http-health-check = pkgs.callPackage ./pkgs/systemd-http-health-check.nix {};
       };
 
       overlays = {
