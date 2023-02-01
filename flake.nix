@@ -35,6 +35,7 @@
       _file = ./flake.nix;
       imports = [
         sops-nix.nixosModules.sops
+        self.nixosModules.bad-python-server
       ];
       config = {
         nixpkgs.config.allowUnfree = true;
@@ -64,6 +65,7 @@
 
       nixosModules = {
         minecraft-server = import ./modules/minecraft-server.nix;
+        bad-python-server = import ./modules/bad-python-server.nix;
       };
 
       packages.${system} = import ./pkgs/all-packages.nix {inherit pkgs;};

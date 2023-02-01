@@ -23,6 +23,8 @@
     ./modules/minecraft.nix
   ];
 
+  services.phenix.bad-python-server.enable = true;
+
   networking.hostName = "nona";
   networking.domain = "hosts.byte.surf";
 
@@ -45,5 +47,5 @@
     pkgs.rsync
   ];
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.05"; # Initially installed version. DO NOT TOUCH!
 }
