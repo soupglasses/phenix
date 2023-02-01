@@ -66,15 +66,10 @@
         minecraft-server = import ./modules/minecraft-server.nix;
       };
 
-      packages.${system} = {
-        tt-rss-plugin-fever = pkgs.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
-        systemd-http-health-check = pkgs.callPackage ./pkgs/systemd-http-health-check.nix {};
-      };
+      packages.${system} = import ./pkgs/all-packages.nix {inherit pkgs;};
 
       overlays = {
-        tt-rss-plugin-fever = final: _prev: {
-          tt-rss-plugin-fever = final.callPackage ./pkgs/tt-rss-plugin-fever.nix {};
-        };
+        packages = final: _prev: {phenix = final.lib.recurseIntoAttrs (import ./pkgs/all-packages.nix {inherit (final) pkgs;});};
         prometheus-systemd-exporter = _final: prev: {
           prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
             patches = [

@@ -51,7 +51,7 @@
 
     pluginPackages = [
       pkgs.tt-rss-plugin-auth-ldap
-      pkgs.tt-rss-plugin-fever
+      pkgs.phenix.tt-rss-plugin-fever
     ];
 
     plugins = [
