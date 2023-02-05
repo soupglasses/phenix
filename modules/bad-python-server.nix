@@ -34,7 +34,7 @@ in {
         Type = "notify";
         NotifyAccess = "all";
         Restart = "on-failure";
-        WatchdogSec = 20;
+        WatchdogSec = 240;
         TimeoutStartSec = 5;
         ExecStart = ''
           ${pkgs.bash}/bin/bash -c '${pkgs.phenix.systemd-http-health-check}/bin/systemd_http_health_check "http://localhost:8080/health" \
