@@ -1,0 +1,28 @@
+From f5a37a2efff4ef99a8baa9a86904f81ec6306a13 Mon Sep 17 00:00:00 2001
+From: Sofi <sofi+git@mailbox.org>
+Date: Fri, 3 Feb 2023 10:35:12 +0100
+Subject: [PATCH] extra-disable
+
+---
+ jellyfin.ruleset | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/jellyfin.ruleset b/jellyfin.ruleset
+index bf70fef1e..e84dc3dcb 100644
+--- a/jellyfin.ruleset
++++ b/jellyfin.ruleset
+@@ -81,6 +81,11 @@
+     <Rule Id="SA1623" Action="None" />
+     <!-- disable warning SA1625: Element documentation should not be copied and pasted -->
+     <Rule Id="SA1625" Action="None" />
++
++    <!-- disable warning SA1027: Tabs and spaces should be used correctly -->
++    <Rule Id="SA1027" Action="None" />
++    <!-- disable warning SA1627: The documentation text within the 'exception' tag should not be empty -->
++    <Rule Id="SA1627" Action="None" />
+   </Rules>
+ 
+   <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.Design">
+-- 
+2.39.0
+
