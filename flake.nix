@@ -71,7 +71,14 @@
       packages.${system} = import ./pkgs/all-packages.nix {inherit pkgs;};
 
       overlays = {
-        packages = final: _prev: {phenix = final.lib.recurseIntoAttrs (import ./pkgs/all-packages.nix {inherit (final) pkgs;});};
+        packages = final: _prev: {
+          phenix =
+            {
+              lib = import ./lib {inherit (final) pkgs;};
+            }
+            // final.lib.recurseIntoAttrs
+            (import ./pkgs/all-packages.nix {inherit (final) pkgs;});
+        };
         prometheus-systemd-exporter = _final: prev: {
           prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
             patches = [
@@ -89,7 +96,9 @@
         };
       };
 
-      lib.${system} = import ./lib pkgs;
+      # -- Library --
+
+      legacyPackages.${system}.lib = import ./lib pkgs;
 
       # --- Systems ---
 
@@ -111,28 +120,8 @@
         profiles.system = {
           user = "root";
           path =
-            self.lib."x86_64-linux".deploy.activate.nixos
+            self.legacyPackages."x86_64-linux".lib.deploy.activate.nixos
             self.nixosConfigurations.nona;
-        };
-      };
-
-      # --- System images ---
-
-      images."x86_64-linux" = {
-        qemu = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
-          system = "x86_64-linux";
-          config =
-            (nixpkgs.lib.nixosSystem {
-              system = "x86_64-linux";
-              modules = [
-                "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
-                ./common
-                ./common/hardware/qemu.nix
-              ];
-            })
-            .config;
-          format = "qcow2";
-          partitionTableType = "legacy";
         };
       };
 
@@ -153,10 +142,14 @@
         ];
       };
 
+      # -- Formatter --
+
+      formatter.${system} = pkgs.alejandra;
+
       # --- Tests ---
 
       checks.${system} = let
-        deploy-checks = self.lib.${system}.deploy.deployChecks self.deploy;
+        deploy-checks = self.legacyPackages.${system}.lib.deploy.deployChecks self.deploy;
       in {
         deploy-activate = deploy-checks.deploy-activate;
         deploy-schema = deploy-checks.deploy-schema;
