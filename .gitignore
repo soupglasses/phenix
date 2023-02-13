@@ -1,4 +1,4 @@
 # Nix related folders
 /.direnv
 /.pre-commit-config.yaml
-result/
+result
