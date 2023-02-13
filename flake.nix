@@ -1,12 +1,20 @@
 {
   description = "Phenix infrastructure";
 
+  nixConfig.extra-substituters = "https://cache.garnix.io";
+  nixConfig.extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
+
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "nixpkgs/nixos-22.11";
     # Utils
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
+    pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     # Packages
     nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
