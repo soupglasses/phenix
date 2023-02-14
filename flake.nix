@@ -76,7 +76,7 @@
         bad-python-server = import ./modules/bad-python-server.nix;
       };
 
-      packages.${system} = import ./pkgs/all-packages.nix {inherit pkgs;};
+      packages.${system} = import ./packages/all-packages.nix {inherit pkgs;};
 
       overlays = {
         packages = final: _prev: {
@@ -85,7 +85,7 @@
               lib = import ./lib {inherit (final) pkgs;};
             }
             // final.lib.recurseIntoAttrs
-            (import ./pkgs/all-packages.nix {inherit (final) pkgs;});
+            (import ./packages/all-packages.nix {inherit (final) pkgs;});
         };
         prometheus-systemd-exporter = _final: prev: {
           prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
