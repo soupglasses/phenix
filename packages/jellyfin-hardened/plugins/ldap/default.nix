@@ -27,6 +27,4 @@ buildDotnetModule {
 
   dotnet-sdk = dotnetCorePackages.sdk_6_0;
   dotnet-runtime = dotnetCorePackages.aspnetcore_6_0;
-
-  #executables = [ "foo" ]; # This wraps "$out/lib/$pname/foo" to `$out/bin/foo`.
 }
