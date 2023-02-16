@@ -165,15 +165,10 @@
 
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
+          excludes = ["-deps.nix$" "-composition.nix$"];
           hooks = {
-            alejandra = {
-              enable = true;
-              excludes = ["-deps.nix$" "-composition.nix$"];
-            };
-            deadnix = {
-              enable = true;
-              excludes = ["-deps.nix$" "-composition.nix$"];
-            };
+            alejandra.enable = true;
+            deadnix.enable = true;
             editorconfig-checker.enable = true;
             codespell = {
               enable = true;
@@ -181,7 +176,6 @@
               language = "system";
               entry = "${pkgs.codespell}/bin/codespell";
               types = ["text"];
-              excludes = ["-deps.nix$" "-composition.nix$"];
             };
           };
         };
