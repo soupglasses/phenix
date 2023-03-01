@@ -32,13 +32,17 @@
     nix-minecraft,
     ...
   } @ inputs: let
-    systems = [
+    supportedSystems = [
       "aarch64-linux"
       "x86_64-linux"
     ];
-    foldEachSystem = systems: f:
-      builtins.foldl' nixpkgs.lib.recursiveUpdate {}
-      (nixpkgs.lib.forEach systems f);
+
+    eachSystem = f:
+      nixpkgs.lib.genAttrs supportedSystems (system:
+        f {
+          inherit system;
+          pkgs = nixpkgs.legacyPackages.${system};
+        });
 
     commonModule = {
       _file = ./flake.nix;
@@ -66,77 +70,80 @@
         system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
       };
     };
-  in
-    foldEachSystem systems (system: let
-      pkgs = nixpkgs.legacyPackages.${system}.pkgs;
-    in {
-      # --- Public ---
+  in {
+    # --- Public ---
 
-      nixosModules = {
-        minecraft-server = import ./modules/minecraft-server.nix;
-        bad-python-server = import ./modules/bad-python-server.nix;
+    nixosModules = {
+      minecraft-server = import ./modules/minecraft-server.nix;
+      bad-python-server = import ./modules/bad-python-server.nix;
+    };
+
+    packages = eachSystem ({pkgs, ...}: import ./packages/all-packages.nix {inherit pkgs;});
+
+    overlays = {
+      packages = final: _prev: {
+        phenix =
+          {
+            lib = import ./lib {inherit (final) pkgs;};
+          }
+          // final.lib.recurseIntoAttrs
+          (import ./packages/all-packages.nix {inherit (final) pkgs;});
       };
-
-      packages.${system} = import ./packages/all-packages.nix {inherit pkgs;};
-
-      overlays = {
-        packages = final: _prev: {
-          phenix =
-            {
-              lib = import ./lib {inherit (final) pkgs;};
-            }
-            // final.lib.recurseIntoAttrs
-            (import ./packages/all-packages.nix {inherit (final) pkgs;});
-        };
-        prometheus-systemd-exporter = _final: prev: {
-          prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
-            patches = [
-              # https://github.com/prometheus-community/systemd_exporter/pull/74
-              (prev.fetchpatch {
-                url = "https://github.com/prometheus-community/systemd_exporter/commit/0afc9bee009740825239df1e6ffa1713a57a5692.patch";
-                sha256 = "sha256-ClrV9ZOlRruYXaeQwhWc9h88LP3Rm33Jf/dvxbqRS2I=";
-              })
-              (prev.fetchpatch {
-                url = "https://github.com/prometheus-community/systemd_exporter/commit/47d7e92ec34303a8da471fd1c26106f606e5a150.patch";
-                sha256 = "sha256-Ox9IE8LeYBflitelyZr4Ih1zSt9ggjnogj6k0qI2kx4=";
-              })
-            ];
-          });
-        };
-      };
-
-      # -- Library --
-
-      legacyPackages.${system}.lib = import ./lib pkgs;
-
-      # --- Systems ---
-
-      nixosConfigurations = {
-        nona = nixpkgs.lib.nixosSystem rec {
-          system = "x86_64-linux";
-          specialArgs = {inherit inputs system;};
-          modules = [
-            commonModule
-            ./hosts/nona
+      prometheus-systemd-exporter = _final: prev: {
+        prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
+          patches = [
+            # https://github.com/prometheus-community/systemd_exporter/pull/74
+            (prev.fetchpatch {
+              url = "https://github.com/prometheus-community/systemd_exporter/commit/0afc9bee009740825239df1e6ffa1713a57a5692.patch";
+              sha256 = "sha256-ClrV9ZOlRruYXaeQwhWc9h88LP3Rm33Jf/dvxbqRS2I=";
+            })
+            (prev.fetchpatch {
+              url = "https://github.com/prometheus-community/systemd_exporter/commit/47d7e92ec34303a8da471fd1c26106f606e5a150.patch";
+              sha256 = "sha256-Ox9IE8LeYBflitelyZr4Ih1zSt9ggjnogj6k0qI2kx4=";
+            })
           ];
-        };
+        });
       };
+    };
 
-      deploy.nodes.nona = {
-        hostname = "nona.hosts.byte.surf";
-        sshUser = "sofi";
+    # -- Library --
 
-        profiles.system = {
-          user = "root";
-          path =
-            self.legacyPackages."x86_64-linux".lib.deploy.activate.nixos
-            self.nixosConfigurations.nona;
-        };
+    legacyPackages = eachSystem ({pkgs, ...}: {
+      lib = import ./lib pkgs;
+    });
+
+    # --- Systems ---
+
+    nixosConfigurations = {
+      nona = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs system;};
+        modules = [
+          commonModule
+          ./hosts/nona
+        ];
       };
+    };
 
-      # --- Development shell ---
+    deploy.nodes.nona = {
+      hostname = "nona.hosts.byte.surf";
+      sshUser = "sofi";
 
-      devShells.${system}.default = pkgs.mkShellNoCC {
+      profiles.system = {
+        user = "root";
+        path =
+          self.legacyPackages."x86_64-linux".lib.deploy.activate.nixos
+          self.nixosConfigurations.nona;
+      };
+    };
+
+    # --- Development shell ---
+
+    devShells = eachSystem ({
+      system,
+      pkgs,
+    }: {
+      default = pkgs.mkShellNoCC {
         inherit (self.checks.${system}.pre-commit-check) shellHook;
         nativeBuildInputs = with pkgs; [
           # Basic Packages
@@ -150,35 +157,39 @@
           alejandra
         ];
       };
+    });
 
-      # -- Formatter --
+    # -- Formatter --
 
-      formatter.${system} = pkgs.alejandra;
+    formatter = eachSystem ({pkgs, ...}: pkgs.alejandra);
 
-      # --- Tests ---
+    # --- Tests ---
 
-      checks.${system} = let
-        deploy-checks = self.legacyPackages.${system}.lib.deploy.deployChecks self.deploy;
-      in {
-        deploy-activate = deploy-checks.deploy-activate;
-        deploy-schema = deploy-checks.deploy-schema;
+    checks = eachSystem ({
+      system,
+      pkgs,
+    }: let
+      deploy-checks = self.legacyPackages.${system}.lib.deploy.deployChecks self.deploy;
+    in {
+      deploy-activate = deploy-checks.deploy-activate;
+      deploy-schema = deploy-checks.deploy-schema;
 
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          excludes = ["-deps.nix$" "-composition.nix$"];
-          hooks = {
-            alejandra.enable = true;
-            deadnix.enable = true;
-            editorconfig-checker.enable = true;
-            codespell = {
-              enable = true;
-              name = "codespell";
-              language = "system";
-              entry = "${pkgs.codespell}/bin/codespell";
-              types = ["text"];
-            };
+      pre-commit-check = pre-commit-hooks.lib.${system}.run {
+        src = ./.;
+        excludes = ["-deps.nix$" "-composition.nix$"];
+        hooks = {
+          alejandra.enable = true;
+          deadnix.enable = true;
+          editorconfig-checker.enable = true;
+          codespell = {
+            enable = true;
+            name = "codespell";
+            language = "system";
+            entry = "${pkgs.codespell}/bin/codespell";
+            types = ["text"];
           };
         };
       };
     });
+  };
 }
