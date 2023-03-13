@@ -31,7 +31,7 @@
     sops-nix,
     nix-minecraft,
     ...
-  } @ inputs: let
+  }: let
     supportedSystems = [
       "aarch64-linux"
       "x86_64-linux"
@@ -115,9 +115,8 @@
     # --- Systems ---
 
     nixosConfigurations = {
-      nona = nixpkgs.lib.nixosSystem rec {
+      nona = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs system;};
         modules = [
           commonModule
           ./hosts/nona
