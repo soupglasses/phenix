@@ -8,21 +8,23 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-22.11";
-    # Utils
-    devshell.url = "github:numtide/devshell";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    # Packages
+    nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
+    nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
+    # Secret management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
+    # Formatting
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-    # Packages
-    nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
-    nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
+    # Utils
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
     # Compatibility
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
@@ -31,11 +33,11 @@
   outputs = {
     self,
     nixpkgs,
-    devshell,
-    pre-commit-hooks,
-    sops-nix,
-    treefmt-nix,
     nix-minecraft,
+    sops-nix,
+    pre-commit-hooks,
+    treefmt-nix,
+    devshell,
     ...
   }: let
     supportedSystems = [
