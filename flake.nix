@@ -20,14 +20,17 @@
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
+    pre-commit-hooks.inputs.flake-utils.follows = "flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     # Utils
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.inputs.flake-utils.follows = "flake-utils";
     # Compatibility
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = {
