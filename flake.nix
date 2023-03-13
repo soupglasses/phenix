@@ -18,6 +18,8 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     # Packages
     nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +34,7 @@
     devshell,
     pre-commit-hooks,
     sops-nix,
+    treefmt-nix,
     nix-minecraft,
     ...
   }: let
@@ -168,7 +171,16 @@
 
     # -- Formatter --
 
-    formatter = eachSystem ({pkgs, ...}: pkgs.alejandra);
+    formatter = eachSystem ({pkgs, ...}:
+      treefmt-nix.lib.mkWrapper pkgs {
+        projectRootFile = "flake.nix";
+        programs.alejandra.enable = true;
+        settings.formatter.deadnix = {
+          command = "${pkgs.deadnix}/bin/deadnix";
+          options = ["--edit"];
+          includes = ["*.nix"];
+        };
+      });
 
     # --- Tests ---
 
