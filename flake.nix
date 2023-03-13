@@ -55,14 +55,62 @@
           pkgs = nixpkgs.legacyPackages.${system};
         });
   in {
-    # --- Public ---
+    # -- NixOS Configurations --
+    # Holds the set of our NixOS configured servers.
+
+    nixosConfigurations = {
+      nona = self.lib.mkSystem self {
+        system = "x86_64-linux";
+        imports = [
+          sops-nix.nixosModules.sops
+          self.nixosModules.bad-python-server
+        ];
+        overlays = [
+          nix-minecraft.overlays.default
+          self.overlays.packages
+          self.overlays.prometheus-systemd-exporter
+        ];
+        modules = [
+          ./hosts/nona
+        ];
+      };
+    };
+
+    # -- Deployment Nodes --
+    # Holds deployment spessific configuration for each server, used by deploy-rs.
+
+    deploy.nodes.nona = {
+      hostname = "nona.hosts.byte.surf";
+      sshUser = "sofi";
+
+      profiles.system = {
+        user = "root";
+        path =
+          self.lib."x86_64-linux".deploy.activate.nixos
+          self.nixosConfigurations.nona;
+      };
+    };
+
+    # -- NixOS Modules --
+    # Modules create or modify configurable options included in a full nixos configuration.
 
     nixosModules = {
       minecraft-server = import ./modules/minecraft-server.nix;
       bad-python-server = import ./modules/bad-python-server.nix;
     };
 
+    # -- Packages --
+    # Exposes our packages as a flake output so others can use them.
+
     packages = eachSystem ({pkgs, ...}: import ./packages/all-packages.nix {inherit pkgs;});
+
+    # -- Library --
+    # Holds our various functions and derivations aiding in deploying nixos.
+
+    lib = import ./lib/default.nix // eachSystem ({pkgs, ...}: import ./lib/with-pkgs.nix pkgs);
+
+    # -- Overlays --
+    # Allows modification of nixpkgs in-place, adding and modifying its functionality.
 
     overlays = {
       packages = final: _prev: {
@@ -87,70 +135,8 @@
       };
     };
 
-    # -- Library --
-
-    lib = import ./lib/default.nix // eachSystem ({pkgs, ...}: import ./lib/with-pkgs.nix pkgs);
-
-    # --- Systems ---
-
-    nixosConfigurations = {
-      nona = self.lib.mkSystem self {
-        system = "x86_64-linux";
-        imports = [
-          sops-nix.nixosModules.sops
-          self.nixosModules.bad-python-server
-        ];
-        overlays = [
-          nix-minecraft.overlays.default
-          self.overlays.packages
-          self.overlays.prometheus-systemd-exporter
-        ];
-        modules = [
-          ./hosts/nona
-        ];
-      };
-    };
-
-    deploy.nodes.nona = {
-      hostname = "nona.hosts.byte.surf";
-      sshUser = "sofi";
-
-      profiles.system = {
-        user = "root";
-        path =
-          self.lib."x86_64-linux".deploy.activate.nixos
-          self.nixosConfigurations.nona;
-      };
-    };
-
-    # --- Development shell ---
-
-    devShells = eachSystem ({
-      system,
-      pkgs,
-    }: {
-      default = devshell.legacyPackages.${system}.mkShell {
-        devshell = {
-          startup = {
-            motd = nixpkgs.lib.mkForce {text = "";};
-            pre-commit-check = {text = self.checks.${system}.pre-commit-check.shellHook;};
-          };
-          packages = with pkgs; [
-            # Basic Packages
-            nixUnstable
-            pkgs.deploy-rs
-            # Secret Encryption
-            age
-            ssh-to-age
-            sops
-            # Helpers and formatters
-            alejandra
-          ];
-        };
-      };
-    });
-
     # -- Formatter --
+    # Abstracts all formatting tools into one command, `nix fmt`.
 
     formatter = eachSystem ({pkgs, ...}:
       treefmt-nix.lib.mkWrapper pkgs {
@@ -163,7 +149,36 @@
         };
       });
 
-    # --- Tests ---
+    # -- Development Shells --
+    # Virtual shells holding packages and shellhooks aiding development.
+
+    devShells = eachSystem ({
+      system,
+      pkgs,
+    }: {
+      default = devshell.legacyPackages.${system}.mkShell {
+        devshell = {
+          startup = {
+            motd = nixpkgs.lib.mkForce {text = "";};
+            pre-commit-check = {text = self.checks.${system}.pre-commit-check.shellHook;};
+          };
+          packages = with pkgs; [
+            nixUnstable
+            # Deployment
+            pkgs.deploy-rs
+            # Secrets management
+            age
+            ssh-to-age
+            sops
+            # Formatters
+            alejandra
+          ];
+        };
+      };
+    });
+
+    # -- Tests --
+    # Verify locally that nixos configurations and file formatting is correct.
 
     checks = eachSystem ({
       system,
