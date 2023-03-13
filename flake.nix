@@ -9,6 +9,8 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-22.11";
     # Utils
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
@@ -27,6 +29,7 @@
   outputs = {
     self,
     nixpkgs,
+    devshell,
     pre-commit-hooks,
     sops-nix,
     nix-minecraft,
@@ -142,19 +145,24 @@
       system,
       pkgs,
     }: {
-      default = pkgs.mkShellNoCC {
-        inherit (self.checks.${system}.pre-commit-check) shellHook;
-        nativeBuildInputs = with pkgs; [
-          # Basic Packages
-          nixUnstable
-          pkgs.deploy-rs
-          # Secret Encryption
-          age
-          ssh-to-age
-          sops
-          # Helpers and formatters
-          alejandra
-        ];
+      default = devshell.legacyPackages.${system}.mkShell {
+        devshell = {
+          startup = {
+            motd = nixpkgs.lib.mkForce {text = "";};
+            pre-commit-check = {text = self.checks.${system}.pre-commit-check.shellHook;};
+          };
+          packages = with pkgs; [
+            # Basic Packages
+            nixUnstable
+            pkgs.deploy-rs
+            # Secret Encryption
+            age
+            ssh-to-age
+            sops
+            # Helpers and formatters
+            alejandra
+          ];
+        };
       };
     });
 
