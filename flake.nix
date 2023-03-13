@@ -67,10 +67,7 @@
     overlays = {
       packages = final: _prev: {
         phenix =
-          {
-            lib = import ./lib {inherit (final) pkgs;};
-          }
-          // final.lib.recurseIntoAttrs
+          final.lib.recurseIntoAttrs
           (import ./packages/all-packages.nix {inherit (final) pkgs;});
       };
       prometheus-systemd-exporter = _final: prev: {
@@ -92,7 +89,7 @@
 
     # -- Library --
 
-    lib = import ./lib {inherit nixpkgs supportedSystems;};
+    lib = import ./lib/default.nix // eachSystem ({pkgs, ...}: import ./lib/with-pkgs.nix pkgs);
 
     # --- Systems ---
 
