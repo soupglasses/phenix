@@ -54,33 +54,6 @@
           inherit system;
           pkgs = nixpkgs.legacyPackages.${system};
         });
-
-    commonModule = {
-      _file = ./flake.nix;
-      imports = [
-        sops-nix.nixosModules.sops
-        self.nixosModules.bad-python-server
-      ];
-      config = {
-        nixpkgs.config.allowUnfree = true;
-        nixpkgs.overlays =
-          nixpkgs.lib.attrValues self.overlays
-          ++ [
-            nix-minecraft.overlays.default
-          ];
-        # Use our hashes and modified dates for version
-        # suffixes, instead of upstream.
-        system.nixos.versionSuffix =
-          nixpkgs.lib.mkForce ".${
-            nixpkgs.lib.substring 0 8 (self.lastModifiedDate or self.lastModified)
-          }.${
-            self.shortRev or "dirty"
-          }";
-        # Nix struggles with revisions in dirty repos
-        # See: https://github.com/NixOS/nix/pull/5385
-        system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-      };
-    };
   in {
     # --- Public ---
 
@@ -119,17 +92,23 @@
 
     # -- Library --
 
-    legacyPackages = eachSystem ({pkgs, ...}: {
-      lib = import ./lib pkgs;
-    });
+    lib = import ./lib {inherit nixpkgs supportedSystems;};
 
     # --- Systems ---
 
     nixosConfigurations = {
-      nona = nixpkgs.lib.nixosSystem {
+      nona = self.lib.mkSystem self {
         system = "x86_64-linux";
+        imports = [
+          sops-nix.nixosModules.sops
+          self.nixosModules.bad-python-server
+        ];
+        overlays = [
+          nix-minecraft.overlays.default
+          self.overlays.packages
+          self.overlays.prometheus-systemd-exporter
+        ];
         modules = [
-          commonModule
           ./hosts/nona
         ];
       };
@@ -142,7 +121,7 @@
       profiles.system = {
         user = "root";
         path =
-          self.legacyPackages."x86_64-linux".lib.deploy.activate.nixos
+          self.lib."x86_64-linux".deploy.activate.nixos
           self.nixosConfigurations.nona;
       };
     };
@@ -193,7 +172,7 @@
       system,
       pkgs,
     }: let
-      deploy-checks = self.legacyPackages.${system}.lib.deploy.deployChecks self.deploy;
+      deploy-checks = self.lib.${system}.deploy.deployChecks self.deploy;
     in {
       deploy-activate = deploy-checks.deploy-activate;
       deploy-schema = deploy-checks.deploy-schema;
