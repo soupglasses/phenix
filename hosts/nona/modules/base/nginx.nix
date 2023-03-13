@@ -1,18 +1,47 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   networking.firewall.allowedTCPPorts = [80 443];
 
   security.dhparams.params.nginx.bits = 1024;
 
   services.nginx = {
     enable = true;
+    package = pkgs.nginxMainline;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
 
     sslDhparam = config.security.dhparams.params.nginx.path;
 
-    # from: https://grafana.com/grafana/dashboards/12559
     commonHttpConfig = ''
+      # Watch for changes in https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/web-servers/nginx/default.nix
+      # recommendedTlsSettings without ssl_sesson_tickets.
+      # Keep in sync with https://ssl-config.mozilla.org/#server=nginx&config=intermediate
+      ssl_session_timeout 1d;
+      ssl_session_cache shared:SSL:10m;
+      # We don't enable insecure ciphers by default, so this allows
+      # clients to pick the most performant, per https://github.com/mozilla/server-side-tls/issues/260
+      ssl_prefer_server_ciphers off;
+      # OCSP stapling
+      ssl_stapling on;
+      ssl_stapling_verify on;
+
+      # Requires nginxMainline currently to be safe. https://github.com/mozilla/server-side-tls/issues/284
+      ssl_session_tickets on;
+
+      # Add HSTS Preloading. Re-add this to any location blocks if they include add_header blocks.
+      map $scheme $hsts_header {
+          https   "max-age=31536000; includeSubdomains; preload";
+      }
+      add_header Strict-Transport-Security $hsts_header;
+
+      # Minimize information leaked to other domains
+      add_header 'Referrer-Policy' 'origin-when-cross-origin';
+
+      # Grafana https://grafana.com/grafana/dashboards/12559
       log_format json_analytics escape=json '{'
         '"msec": "$msec", ' # request unixtime in seconds with a milliseconds resolution
         '"connection": "$connection", ' # connection serial number
