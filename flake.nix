@@ -71,7 +71,7 @@
           self.overlays.prometheus-systemd-exporter
         ];
         modules = [
-          ./hosts/nona
+          ./nixos/hosts/nona
         ];
       };
     };
@@ -95,19 +95,19 @@
     # Modules create or modify configurable options included in a full nixos configuration.
 
     nixosModules = {
-      minecraft-server = import ./modules/minecraft-server.nix;
-      bad-python-server = import ./modules/bad-python-server.nix;
+      minecraft-server = import ./nixos/modules/minecraft-server.nix;
+      bad-python-server = import ./nixos/modules/bad-python-server.nix;
     };
 
     # -- Packages --
     # Exposes our packages as a flake output so others can use them.
 
-    packages = eachSystem ({pkgs, ...}: import ./packages/all-packages.nix {inherit pkgs;});
+    packages = eachSystem ({pkgs, ...}: import ./nixos/packages/all-packages.nix {inherit pkgs;});
 
     # -- Library --
     # Holds our various functions and derivations aiding in deploying nixos.
 
-    lib = import ./lib/default.nix // eachSystem ({pkgs, ...}: import ./lib/with-pkgs.nix pkgs);
+    lib = import ./nixos/lib/default.nix // eachSystem ({pkgs, ...}: import ./nixos/lib/with-pkgs.nix pkgs);
 
     # -- Overlays --
     # Allows modification of nixpkgs in-place, adding and modifying its functionality.
@@ -116,7 +116,7 @@
       packages = final: _prev: {
         phenix =
           final.lib.recurseIntoAttrs
-          (import ./packages/all-packages.nix {inherit (final) pkgs;});
+          (import ./nixos/packages/all-packages.nix {inherit (final) pkgs;});
       };
       prometheus-systemd-exporter = _final: prev: {
         prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {

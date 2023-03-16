@@ -7,7 +7,7 @@ creation_rules:
       - age:
         - *admin_sofi
         - *server_nona
-  - path_regex: hosts/nona/secrets/[^/]+\.yaml$
+  - path_regex: nixos/hosts/nona/secrets/[^/]+\.yaml$
     key_groups:
       - age:
         - *admin_sofi
