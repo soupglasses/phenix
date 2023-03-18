@@ -7,6 +7,12 @@
         }:${toString config.services.grafana.settings.server.http_port}/";
         proxyWebsockets = true;
       };
+      "= /grafana/metrics" = {
+        extraConfig = ''
+          allow 127.0.0.1;
+          deny all;
+        '';
+      };
     };
   };
 
