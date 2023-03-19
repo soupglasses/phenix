@@ -166,6 +166,7 @@
             nixUnstable
             # Deployment
             pkgs.deploy-rs
+            terraform
             # Secrets management
             age
             ssh-to-age
