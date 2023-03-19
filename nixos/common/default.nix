@@ -5,6 +5,17 @@
 }: {
   imports = [./users.nix];
 
+  system.activationScripts.requires-reboot = ''
+    if [[ -e /run/current-system ]]; then
+      var1="`realpath /run/booted-system/{initrd,kernel,kernel-modules}`"
+      var2="`realpath $systemConfig/{initrd,kernel,kernel-modules}`"
+
+      if [[ $var1 != $var2 ]]; then
+        echo "WARN: Kernel has changed, system requires to be manually rebooted to fully apply this update!"
+      fi
+    fi
+  '';
+
   boot.cleanTmpDir = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
