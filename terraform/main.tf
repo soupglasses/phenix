@@ -65,6 +65,14 @@ resource "desec_rrset" "byte_surf-watch-CNAME" {
   ttl     = 3600
 }
 
+resource "desec_rrset" "byte_surf-silly-CNAME" {
+  domain  = "byte.surf"
+  subname = "silly"
+  type    = "CNAME"
+  records = ["nona.hosts.byte.surf."]
+  ttl     = 3600
+}
+
 # Top level
 
 resource "desec_rrset" "byte_surf--A" {
