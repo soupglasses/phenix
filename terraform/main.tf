@@ -81,7 +81,7 @@ resource "desec_rrset" "byte_surf--CAA" {
   domain  = "byte.surf"
   subname = ""
   type    = "CAA"
-  records = ["0 issue letsencrypt.org"]
+  records = ["0 issue \"letsencrypt.org\""]
   ttl     = 3600
 }
 
