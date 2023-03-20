@@ -3,6 +3,7 @@
     enable = true;
     port = 9001;
     globalConfig.scrape_interval = "15s";
+    retentionTime = "180d";
     scrapeConfigs = [
       {
         job_name = "node";
@@ -29,9 +30,6 @@
       systemd = {
         enable = true;
         port = 9558;
-        extraFlags = [
-          "--systemd.collector.unit-exclude='.*\\.mount'"
-        ];
       };
     };
   };
