@@ -1,0 +1,175 @@
+---
+- hosts: openwrt
+
+  roles:
+    - gekmihesg.openwrt
+
+  handlers:
+    - name: reload system
+      service:
+        name: system
+        state: restarted
+    - name: reload dropbear
+      service:
+        name: dropbear
+        state: restarted
+    - name: reload dnsmasq
+      service:
+        name: dnsmasq
+        state: restarted
+    - name: reload unbound
+      service:
+        name: unbound
+        state: restarted
+    - name: reload uhttpd
+      service:
+        name: uhttpd
+        state: restarted
+
+  tasks:
+    - name: uci - ensure no pending changes
+      uci:
+        command: revert
+
+    # Website
+
+    - name: uhttpd has https redirect
+      uci:
+        command: set
+        key: uhttpd.main.redirect_https
+        value: 'on'
+
+    - name: uhttpd - uci commit
+      uci:
+        command: commit
+        key: uhttpd
+      notify: reload uhttpd
+
+    # General system
+
+    - name: system - set hostname and timezone
+      uci:
+        command: set
+        key: system.@system[0]
+        value:
+          hostname: router
+          timezone: Europe/Copenhagen
+
+    - name: system - uci commit
+      uci:
+        command: commit
+        key: system
+      notify:
+        - reload system
+        - reload dnsmasq
+
+    # SSH
+
+    - name: dropbear - ensure authorized_keys
+      lineinfile:
+        path: /etc/dropbear/authorized_keys
+        line: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvgn0kSAboULv37yLS1fGwByGSudhbQGrP/RrO7+cH+ sofi@mailbox.org
+        create: yes
+
+    - name: dropbear only exposed to lan
+      uci:
+        command: set
+        key: dropbear.@dropbear[0].Interface
+        value: lan
+
+    - name: dropbear disable password authentication
+      uci:
+        command: set
+        key: dropbear.@dropbear[0].PasswordAuth
+        value: 'off'
+
+    - name: dropbear - uci commit
+      uci:
+        command: commit
+        key: dropbear
+      notify: reload dropbear
+
+    # Dnsmasq DHCP
+
+    - name: dnsmasq - ensure dns does not resolve
+      uci:
+        command: set
+        key: dhcp.@dnsmasq[0].noresolv
+        value: '1'
+
+    - name: dnsmasq - ensure on port 1053
+      uci:
+        command: set
+        key: dhcp.@dnsmasq[0].port
+        value: '1053'
+
+    - name: dnsmasq - ensure correct domain
+      uci:
+        command: set
+        key: dhcp.@dnsmasq[0].domain
+        value: lan
+
+    - name: dnsmasq - ensure dhcp uses local dns instead of internal
+      uci:
+        command: set
+        key: dhcp.lan.dhcp_option
+        value:
+          - option:dns-server,0.0.0.0
+
+    - name: dnsmasq - uci commit
+      uci:
+        command: commit
+        key: dhcp
+      notify: reload dnsmasq
+
+    # Unbound DNS
+
+    # https://github.com/openwrt/packages/blob/master/net/unbound/files/README.md#parallel-dnsmasq
+
+    - name: unbound - ensure unbound-daemon is present
+      opkg:
+        name: unbound-daemon
+        state: present
+
+    - name: unbound - ensure link to dhcp server
+      uci:
+        command: set
+        key: unbound.ub_main.dhcp_link
+        value: dnsmasq
+
+    - name: unbound - ensure domain for dhcp
+      uci:
+        command: set
+        key: unbound.ub_main.domain
+        value: lan
+
+    - name: unbound - ensure listen port is 53
+      uci:
+        command: set
+        key: unbound.ub_main.listen_port
+        value: '53'
+
+    - name: unbound - ensure cloudflare as dns
+      uci:
+        command: set
+        key: unbound.fwd_cloudflare
+        value:
+          enabled: '1'
+          fallback: '0'
+
+    - name: unbound - uci commit
+      uci:
+        command: commit
+        key: unbound
+      notify: reload unbound
+
+    - name: unbound - enable service
+      service:
+        name: unbound
+        enabled: yes
+
+    # Clean-up
+
+    - name: uci - cleanup commit
+      uci:
+        command: commit
