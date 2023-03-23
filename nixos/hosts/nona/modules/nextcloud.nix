@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  options,
   ...
 }: {
   sops.secrets."nextcloud/admin-password" = {
@@ -12,6 +13,12 @@
   sops.secrets."nextcloud/ldap-password" = {
     owner = "nextcloud";
     sopsFile = ../secrets/ldap.yaml;
+  };
+
+  services.redis.servers.nextcloud = {
+    enable = true;
+    user = "nextcloud";
+    port = 0;
   };
 
   services.postgresql = {
@@ -31,8 +38,8 @@
   };
 
   systemd.services.nextcloud-setup = {
-    requires = ["postgresql.service"];
-    after = ["postgresql.service"];
+    requires = ["postgresql.service" "redis-nextcloud.service"];
+    after = ["postgresql.service" "redis-nextcloud.service"];
   };
 
   security.acme.certs."cloud.byte.surf".group = "nginx";
@@ -57,5 +64,33 @@
       adminpassFile = config.sops.secrets."nextcloud/admin-password".path;
       defaultPhoneRegion = "DK";
     };
+    caching.redis = true;
+    caching.apcu = false;
+    extraOptions = {
+      redis = {
+        host = "/run/redis-nextcloud/redis.sock";
+        port = 0;
+      };
+      "memcache.local" = "\\OC\\Memcache\\Redis";
+      "memcache.distributed" = "\\OC\\Memcache\\Redis";
+      "memcache.locking" = "\\OC\\Memcache\\Redis";
+    };
+    poolSettings = {
+      "pm" = "dynamic";
+      "pm.max_children" = "48";
+      "pm.start_servers" = "16";
+      "pm.min_spare_servers" = "8";
+      "pm.max_spare_servers" = "16";
+      "pm.max_requests" = "200";
+    };
+    phpOptions =
+      options.services.nextcloud.phpOptions.default
+      // {
+        "zend_extension" = "opcache.so";
+        "opcache.revalidate_freq" = "60";
+        "opcache.save_comments" = "1";
+        "opcache.jit" = "on";
+        "opcache.jit_buffer_size" = "128M";
+      };
   };
 }
