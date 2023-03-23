@@ -88,6 +88,7 @@
       // {
         "zend_extension" = "opcache.so";
         "opcache.revalidate_freq" = "60";
+        "opcache.interned_strings_buffer" = "16";
         "opcache.save_comments" = "1";
         "opcache.jit" = "on";
         "opcache.jit_buffer_size" = "128M";
