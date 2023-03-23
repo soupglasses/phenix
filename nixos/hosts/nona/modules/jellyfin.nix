@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   services.jellyfin = {
     enable = true;
-    package = pkgs.phenix.jellyfin-hardened;
+    package = pkgs.phenix.jellyfin;
   };
 
   security.acme.certs."watch.byte.surf".group = "nginx";

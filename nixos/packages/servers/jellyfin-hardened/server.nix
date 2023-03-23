@@ -7,7 +7,7 @@
   ffmpeg,
   fontconfig,
   freetype,
-  jellyfin-hardened-web,
+  jellyfin-web,
   sqlite,
 }:
 buildDotnetModule rec {
@@ -49,7 +49,7 @@ buildDotnetModule rec {
   preInstall = ''
     makeWrapperArgs+=(
       --add-flags "--ffmpeg ${ffmpeg}/bin/ffmpeg"
-      --add-flags "--webdir ${jellyfin-hardened-web}/share/jellyfin-web"
+      --add-flags "--webdir ${jellyfin-web}/share/jellyfin-web"
     )
   '';
 

@@ -2,7 +2,7 @@
   buildDotnetModule,
   dotnetCorePackages,
   fetchFromGitHub,
-  jellyfin-hardened-core,
+  jellyfin-core,
 }:
 buildDotnetModule {
   pname = "jellyfin-plugin-ldapauth";
@@ -23,7 +23,7 @@ buildDotnetModule {
   nugetDeps = ./nuget-deps.nix;
   packNupkg = false;
 
-  projectReferences = [jellyfin-hardened-core];
+  projectReferences = [jellyfin-core];
 
   dotnet-sdk = dotnetCorePackages.sdk_6_0;
   dotnet-runtime = dotnetCorePackages.aspnetcore_6_0;

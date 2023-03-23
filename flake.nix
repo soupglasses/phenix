@@ -102,7 +102,7 @@
     # -- Packages --
     # Exposes our packages as a flake output so others can use them.
 
-    packages = eachSystem ({pkgs, ...}: import ./nixos/packages/all-packages.nix {inherit pkgs;});
+    packages = eachSystem ({pkgs, ...}: import ./nixos/packages/top-level/all-packages.nix {inherit pkgs;});
 
     # -- Library --
     # Holds our various functions and derivations aiding in deploying nixos.
@@ -116,7 +116,7 @@
       packages = final: _prev: {
         phenix =
           final.lib.recurseIntoAttrs
-          (import ./nixos/packages/all-packages.nix {inherit (final) pkgs;});
+          (import ./nixos/packages/top-level/all-packages.nix {inherit (final) pkgs;});
       };
       prometheus-systemd-exporter = _final: prev: {
         prometheus-systemd-exporter = prev.prometheus-systemd-exporter.overrideAttrs (_p: {
