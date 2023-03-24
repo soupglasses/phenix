@@ -97,6 +97,10 @@
     nixosModules = {
       minecraft-server = import ./nixos/modules/minecraft-server.nix;
       bad-python-server = import ./nixos/modules/bad-python-server.nix;
+      canaille = {pkgs, ...}: {
+        imports = [./nixos/modules/canaille.nix];
+        services.canaille.package = self.packages.${pkgs.system}.canaille;
+      };
     };
 
     # -- Packages --
