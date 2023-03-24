@@ -26,7 +26,14 @@ buildDotnetModule rec {
     sqlite
   ];
 
-  projectFile = "Jellyfin.sln";
+  projectFile = [
+    "MediaBrowser.Controller/MediaBrowser.Controller.csproj" # Jellyfin.Controller
+    "Emby.Naming/Emby.Naming.csproj" # Jellyfin.Naming
+    "MediaBrowser.Common/MediaBrowser.Common.csproj" # Jellyfin.Common
+    "MediaBrowser.Model/MediaBrowser.Model.csproj" # Jellyfin.Model
+    "Jellyfin.Data/Jellyfin.Data.csproj" # Jellyfin.Data
+    "src/Jellyfin.Extensions/Jellyfin.Extensions.csproj" # Jellyfin.Extensions
+  ];
 
   nugetDeps = ./nuget-deps.nix;
   packNupkg = true;
