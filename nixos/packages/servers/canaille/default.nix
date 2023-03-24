@@ -22,6 +22,10 @@ python3.pkgs.buildPythonApplication rec {
     sha256 = "sha256-nsrqqp49Vv8vmJ4/ug4SF5+nhOeTiCiq6h5VES9Ft00=";
   };
 
+  patches = [
+    ./0001-wip-allow-_file-extention-on-config-keys.patch
+  ];
+
   postPatch = ''
     substituteInPlace pyproject.toml \
       --replace "poetry.masonry.api" "poetry.core.masonry.api"
