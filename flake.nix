@@ -192,7 +192,7 @@
 
       pre-commit-check = pre-commit-hooks.lib.${system}.run {
         src = ./.;
-        excludes = ["-deps.nix$" "-composition.nix$"];
+        excludes = ["-deps.nix$" "-composition.nix$" ".patch$"];
         hooks = {
           alejandra.enable = true;
           deadnix.enable = true;
