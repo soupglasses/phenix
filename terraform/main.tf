@@ -96,13 +96,13 @@ resource "desec_rrset" "byte_surf--CAA" {
   ttl     = 3600
 }
 
-# Email hardening
+# Email - Sendinblue
 
 resource "desec_rrset" "byte_surf--TXT" {
   domain  = "byte.surf"
   subname = ""
   type    = "TXT"
-  records = ["v=spf1 -all"]
+  records = ["v=spf1 include:spf.sendinblue.com mx -all"]
   ttl     = 3600
 }
 
@@ -110,14 +110,14 @@ resource "desec_rrset" "byte_surf-dmarc-TXT" {
   domain  = "byte.surf"
   subname = "_dmarc"
   type    = "TXT"
-  records = ["v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;"]
+  records = ["v=DMARC1; p=reject;"]
   ttl     = 3600
 }
 
-resource "desec_rrset" "byte_surf-domainkey-TXT" {
+resource "desec_rrset" "byte_surf-mail_domainkey-TXT" {
   domain  = "byte.surf"
-  subname = "*._domainkey"
+  subname = "mail._domainkey"
   type    = "TXT"
-  records = ["v=DKIM1; p="]
+  records = ["k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDeMVIzrCa3T14JsNY0IRv5/2V1/v2itlviLQBwXsa7shBD6TrBkswsFUToPyMRWC9tbR/5ey0nRBH0ZVxp+lsmTxid2Y2z+FApQ6ra2VsXfbJP3HE6wAO0YTVEJt1TmeczhEd2Jiz/fcabIISgXEdSpTYJhb0ct0VJRxcg4c8c7wIDAQAB"]
   ttl     = 3600
 }
