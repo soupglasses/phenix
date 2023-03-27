@@ -31,6 +31,17 @@ resource "desec_rrset" "byte_surf-nona_hosts-A" {
   ttl     = 3600
 }
 
+resource "desec_rrset" "byte_surf-nona_hosts-SSHFP" {
+  domain  = "byte.surf"
+  subname = "nona.hosts"
+  type    = "SSHFP"
+  records = [
+    "4 2 ea2c60748fafe3d40f35f2ac34e4187601ca042a5f83298422ba12229c3eb87b",
+    "1 2 84d768f3a348146aa3ae6c195ae516522731ff2fc0e32bc254ac8e2b08f8078d"
+  ]
+  ttl     = 3600
+}
+
 # Services
 
 resource "desec_rrset" "byte_surf-cloud-CNAME" {
