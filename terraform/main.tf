@@ -102,7 +102,10 @@ resource "desec_rrset" "byte_surf--TXT" {
   domain  = "byte.surf"
   subname = ""
   type    = "TXT"
-  records = ["v=spf1 include:spf.sendinblue.com mx -all"]
+  records = [
+    "v=spf1 include:spf.sendinblue.com mx -all",
+    "sendinblue-code:deaab76cc107c5de8cad5f956450eb6b"
+  ]
   ttl     = 3600
 }
 
