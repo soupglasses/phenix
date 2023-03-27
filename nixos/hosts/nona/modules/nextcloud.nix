@@ -55,6 +55,7 @@
     https = true;
     phpExtraExtensions = all: [all.ldap];
     enableBrokenCiphersForSSE = false; # Use openssl 3
+    nginx.recommendedHttpHeaders = false;
     config = {
       dbtype = "pgsql";
       dbname = "nextcloud";
@@ -94,4 +95,15 @@
         "opcache.jit_buffer_size" = "128M";
       };
   };
+
+  # Replace with `recommendedHttpHeaders` when: https://nixpk.gs/pr-tracker.html?pr=223182
+  services.nginx.virtualHosts."cloud.byte.surf".extraConfig = ''
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Robots-Tag "noindex, nofollow";
+    add_header X-Download-Options noopen;
+    add_header X-Permitted-Cross-Domain-Policies none;
+    add_header X-Frame-Options sameorigin;
+    add_header Referrer-Policy no-referrer;
+  '';
 }
