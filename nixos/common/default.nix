@@ -16,7 +16,7 @@
     fi
   '';
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Etc/UTC";
