@@ -9,8 +9,9 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-22.11";
     # Packages
-    nix-minecraft.url = "github:imsofi/nix-minecraft/develop";
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
+    nix-minecraft.inputs.flake-utils.follows = "flake-utils";
     # Secret management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -66,7 +67,7 @@
           self.nixosModules.bad-python-server
         ];
         overlays = [
-          nix-minecraft.overlays.default
+          nix-minecraft.overlay
           self.overlays.packages
           self.overlays.prometheus-systemd-exporter
         ];
