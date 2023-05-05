@@ -53,6 +53,7 @@
     enable = true;
     hostName = "cloud.byte.surf";
     https = true;
+    maxUploadSize = "16G";
     phpExtraExtensions = all: [all.ldap];
     enableBrokenCiphersForSSE = false; # Use openssl 3
     nginx.recommendedHttpHeaders = false;
