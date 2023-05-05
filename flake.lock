@@ -80,21 +80,23 @@
     },
     "nix-minecraft": {
       "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1662375648,
-        "narHash": "sha256-C6i6/0UvhIrWs/FI1sg5I+wEjjO/Atyui/XmaTCejDQ=",
-        "owner": "imsofi",
+        "lastModified": 1683249747,
+        "narHash": "sha256-/RYP/PGcsUPdRTAIP9yx0bxjKRdEGfB717BdXBr59oo=",
+        "owner": "Infinidoge",
         "repo": "nix-minecraft",
-        "rev": "4f5f43c996129690903a1fcbd3674a3178053918",
+        "rev": "7a043a1f2d6fa5993b5b8e8f174ef6a9d1676f0c",
         "type": "github"
       },
       "original": {
-        "owner": "imsofi",
-        "ref": "develop",
+        "owner": "Infinidoge",
         "repo": "nix-minecraft",
         "type": "github"
       }

@@ -39,9 +39,9 @@
     enable = true;
     declarative = false;
     eula = true;
-    dataDir = "/var/lib/minecraft/sofrob";
+    dataDir = "/var/lib/minecraft/queer-gaymers";
     openFirewall = true;
-    package = pkgs.nix-minecraft.fabric-1_19;
+    package = pkgs.fabricServers.fabric-1_19_4;
     jvmOpts = "-Xmx2048M -Xms2048M";
   };
 }
