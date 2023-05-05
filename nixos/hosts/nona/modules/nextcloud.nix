@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  options,
   ...
 }: {
   sops.secrets."nextcloud/admin-password" = {
@@ -54,7 +53,7 @@
     hostName = "cloud.byte.surf";
     https = true;
     maxUploadSize = "16G";
-    phpExtraExtensions = all: [all.ldap];
+    phpExtraExtensions = all: [all.ldap all.opcache];
     enableBrokenCiphersForSSE = false; # Use openssl 3
     nginx.recommendedHttpHeaders = false;
     config = {
@@ -85,16 +84,14 @@
       "pm.max_spare_servers" = "16";
       "pm.max_requests" = "200";
     };
-    phpOptions =
-      options.services.nextcloud.phpOptions.default
-      // {
-        "zend_extension" = "opcache.so";
-        "opcache.revalidate_freq" = "60";
-        "opcache.interned_strings_buffer" = "16";
-        "opcache.save_comments" = "1";
-        "opcache.jit" = "on";
-        "opcache.jit_buffer_size" = "128M";
-      };
+    phpOptions = {
+      "opcache.enable" = "1";
+      "opcache.revalidate_freq" = "60";
+      "opcache.interned_strings_buffer" = "16";
+      "opcache.save_comments" = "1";
+      "opcache.jit" = "on";
+      "opcache.jit_buffer_size" = "128M";
+    };
   };
 
   # Replace with `recommendedHttpHeaders` when: https://nixpk.gs/pr-tracker.html?pr=223182
