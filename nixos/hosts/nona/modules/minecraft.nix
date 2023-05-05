@@ -42,6 +42,16 @@
     dataDir = "/var/lib/minecraft/queer-gaymers";
     openFirewall = true;
     package = pkgs.fabricServers.fabric-1_19_4;
-    jvmOpts = "-Xmx2048M -Xms2048M";
+    jvmOpts = builtins.concatStringsSep " " [
+      "-XX:+UnlockExperimentalVMOptions"
+      "-XX:+UseShenandoahGC"
+      "-XX:ShenandoahGCMode=iu"
+      "-XX:+UseNUMA"
+      "-XX:+AlwaysPreTouch"
+      "-XX:+DisableExplicitGC"
+      "-Xms2G"
+      "-Xmx2G"
+      "-server"
+    ];
   };
 }
