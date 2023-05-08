@@ -12,13 +12,13 @@
 }:
 buildDotnetModule rec {
   pname = "jellyfin";
-  version = "10.8.8"; # ensure that jellyfin-web has matching version
+  version = "10.8.10"; # ensure that jellyfin-web has matching version
 
   src = fetchFromGitHub {
     owner = "GermanCoding";
     repo = "jellyfin";
-    rev = "4c06968a00c9ee339765cabd3918621691e13212";
-    hash = "sha256-6vpXJsfUgbn7j9wK3FS/pBw/7uRzkOIu83jo8VBwEE8=";
+    rev = "e4920ad771bb598568aa045aa6ca78833c985710";
+    hash = "sha256-o+SeD/KyY4Sxg5+OX9RX3cD08EG9M6iDrpdp0gteaVI=";
   };
 
   patches = [
@@ -56,8 +56,6 @@ buildDotnetModule rec {
   passthru.tests = {
     smoke-test = nixosTests.jellyfin;
   };
-
-  passthru.updateScript = ./update.sh;
 
   meta = with lib; {
     description = "The Free Software Media System";
