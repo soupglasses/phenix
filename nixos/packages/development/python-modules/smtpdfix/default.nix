@@ -5,16 +5,17 @@
 }:
 python3Packages.buildPythonPackage rec {
   pname = "smtpdfix";
-  version = "0.4.1";
+  version = "0.5.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-B8/zudZrPbZJss2ybuWwBqTMTe94U6ZXbuFYJBxp7UI=";
+    sha256 = "sha256-BCF1APYwxlsV/zFEV7py/Pn5t8auPnwM5IzbLQud5Gk=";
   };
 
   propagatedBuildInputs = with python3Packages; [
     aiosmtpd
     cryptography
+    portpicker
     python-dotenv
   ];
 
