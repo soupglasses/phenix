@@ -12,14 +12,14 @@
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "canaille";
-  version = "0.0.22";
+  version = "0.0.25";
   format = "pyproject";
 
   src = fetchFromGitLab {
     owner = "yaal";
     repo = "canaille";
     rev = "${version}";
-    sha256 = "sha256-nsrqqp49Vv8vmJ4/ug4SF5+nhOeTiCiq6h5VES9Ft00=";
+    sha256 = "sha256-SPp1Ks3YWfmamIHOHM4hVc5zBjwhFtX2tECXasvvWqQ=";
   };
 
   patches = [
@@ -76,7 +76,7 @@ python3.pkgs.buildPythonApplication rec {
 
   postInstall = ''
     mkdir -p $out/etc/schema
-    cp $out/lib/${python3.libPrefix}/site-packages/canaille/ldap_backend/schemas/* $out/etc/schema/
+    cp $out/lib/${python3.libPrefix}/site-packages/canaille/backends/ldap/schemas/* $out/etc/schema/
   '';
 
   meta = with lib; {
