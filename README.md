@@ -18,12 +18,20 @@ This repository contains the infrastructure as code for Phenix, my personal infr
 ```bash
 $ nix develop
  ...
-$ deploy .#hostname
+$ nixos-rebuild switch --fast --use-remote-sudo --target-host [user]@[hostname] --flake .#host
+```
+
+## Contributing
+
+Read [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+```bash
+$ nix fmt .
+ ...
+$ nix flake check
 ```
 
 ## Software used
-
-Deployment to hosts: [deploy-rs](https://github.com/serokell/deploy-rs)
 
 Secrets: [sops-nix](https://github.com/Mic92/sops-nix)
 

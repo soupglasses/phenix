@@ -77,21 +77,6 @@
       };
     };
 
-    # -- Deployment Nodes --
-    # Holds deployment spessific configuration for each server, used by deploy-rs.
-
-    deploy.nodes.nona = {
-      hostname = "nona.hosts.byte.surf";
-      sshUser = "sofi";
-
-      profiles.system = {
-        user = "root";
-        path =
-          self.lib."x86_64-linux".deploy.activate.nixos
-          self.nixosConfigurations.nona;
-      };
-    };
-
     # -- NixOS Modules --
     # Modules create or modify configurable options included in a full nixos configuration.
 
@@ -166,7 +151,6 @@
           packages = with pkgs; [
             nixUnstable
             # Deployment
-            pkgs.deploy-rs
             terraform
             # Secrets management
             age
@@ -185,12 +169,7 @@
     checks = eachSystem ({
       system,
       pkgs,
-    }: let
-      deploy-checks = self.lib.${system}.deploy.deployChecks self.deploy;
-    in {
-      deploy-activate = deploy-checks.deploy-activate;
-      deploy-schema = deploy-checks.deploy-schema;
-
+    }: {
       pre-commit-check = pre-commit-hooks.lib.${system}.run {
         src = ./.;
         excludes = ["-deps.nix$" "-composition.nix$" ".patch$"];
