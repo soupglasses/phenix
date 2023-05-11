@@ -128,11 +128,8 @@
       treefmt-nix.lib.mkWrapper pkgs {
         projectRootFile = "flake.nix";
         programs.alejandra.enable = true;
-        settings.formatter.deadnix = {
-          command = "${pkgs.deadnix}/bin/deadnix";
-          options = ["--edit"];
-          includes = ["*.nix"];
-        };
+        programs.deadnix.enable = true;
+        programs.terraform.enable = true;
       });
 
     # -- Development Shells --

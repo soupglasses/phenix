@@ -11,17 +11,6 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 
-[*.{yml,yaml}]
-indent_size = 2
-
-[*.nix]
-# We deal with indendation trough nixpkgs-fmt as its much
-# more intelligent.
-indent_size = unset
-
-[*.py]
-indent_size = 4
-
 [*.{diff,patch}]
 end_of_line = unset
 insert_final_newline = unset

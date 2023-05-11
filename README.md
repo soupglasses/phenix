@@ -17,7 +17,7 @@ This repository contains the infrastructure as code for Phenix, my personal infr
 
 ```bash
 $ nix develop
- ...
+  ...
 $ nixos-rebuild switch --fast --use-remote-sudo --target-host [user]@[hostname] --flake .#host
 ```
 
@@ -27,7 +27,7 @@ Read [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ```bash
 $ nix fmt .
- ...
+  ...
 $ nix flake check
 ```
 
