@@ -1,8 +1,14 @@
 terraform {
+  cloud {
+    organization = "imsofi"
+    workspaces {
+      name = "phenix"
+    }
+  }
   required_providers {
-    desec = {
-      source  = "Valodim/desec"
-      version = "0.3.0"
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "4.6.0"
     }
     sops = {
       source  = "carlpett/sops"
@@ -17,110 +23,123 @@ data "sops_file" "secrets-dns" {
   source_file = "../secrets/dns.yaml"
 }
 
-provider "desec" {
-  api_token = data.sops_file.secrets-dns.data["desec_token"]
+provider "cloudflare" {
+  api_token = data.sops_file.secrets-dns.data["cloudflare_token"]
+}
+
+data "cloudflare_zone" "byte_surf" {
+  name = "byte.surf"
 }
 
 # Hosts
 
-resource "desec_rrset" "byte_surf-nona_hosts-A" {
-  domain  = "byte.surf"
-  subname = "nona.hosts"
+resource "cloudflare_record" "byte_surf-nona_hosts-A" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "nona.hosts"
   type    = "A"
-  ttl     = 3600
-  records = ["89.58.34.244"]
+  value   = "89.58.34.244"
 }
 
-resource "desec_rrset" "byte_surf-nona_hosts-SSHFP" {
-  domain  = "byte.surf"
-  subname = "nona.hosts"
+resource "cloudflare_record" "byte_surf-nona_hosts-SSHFP_1" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "nona.hosts"
   type    = "SSHFP"
-  ttl     = 3600
-  records = [
-    "4 2 ea2c60748fafe3d40f35f2ac34e4187601ca042a5f83298422ba12229c3eb87b",
-    "1 2 84d768f3a348146aa3ae6c195ae516522731ff2fc0e32bc254ac8e2b08f8078d"
-  ]
+  data {
+    algorithm   = "1"
+    type        = "2"
+    fingerprint = "84d768f3a348146aa3ae6c195ae516522731ff2fc0e32bc254ac8e2b08f8078d"
+  }
+}
+
+resource "cloudflare_record" "byte_surf-nona_hosts-SSHFP_4" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "nona.hosts"
+  type    = "SSHFP"
+  data {
+    algorithm   = "4"
+    type        = "2"
+    fingerprint = "ea2c60748fafe3d40f35f2ac34e4187601ca042a5f83298422ba12229c3eb87b"
+  }
 }
 
 # Services
 
-resource "desec_rrset" "byte_surf-cloud-CNAME" {
-  domain  = "byte.surf"
-  subname = "cloud"
+resource "cloudflare_record" "byte_surf-cloud-CNAME" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "cloud"
   type    = "CNAME"
-  ttl     = 3600
-  records = ["nona.hosts.byte.surf."]
+  value   = "nona.hosts.byte.surf."
 }
 
-resource "desec_rrset" "byte_surf-mc-CNAME" {
-  domain  = "byte.surf"
-  subname = "mc"
+resource "cloudflare_record" "byte_surf-mc-CNAME" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "mc"
   type    = "CNAME"
-  ttl     = 3600
-  records = ["nona.hosts.byte.surf."]
+  value   = "nona.hosts.byte.surf."
 }
 
-resource "desec_rrset" "byte_surf-read-CNAME" {
-  domain  = "byte.surf"
-  subname = "read"
+resource "cloudflare_record" "byte_surf-read-CNAME" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "read"
   type    = "CNAME"
-  ttl     = 3600
-  records = ["nona.hosts.byte.surf."]
+  value   = "nona.hosts.byte.surf."
 }
 
-resource "desec_rrset" "byte_surf-watch-CNAME" {
-  domain  = "byte.surf"
-  subname = "watch"
+resource "cloudflare_record" "byte_surf-watch-CNAME" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "watch"
   type    = "CNAME"
-  ttl     = 3600
-  records = ["nona.hosts.byte.surf."]
+  value   = "nona.hosts.byte.surf."
 }
 
 # Top level
 
-resource "desec_rrset" "byte_surf--A" {
-  domain  = "byte.surf"
-  subname = ""
+resource "cloudflare_record" "byte_surf--A" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "@"
   type    = "A"
-  ttl     = 3600
-  records = ["89.58.34.244"]
+  value   = "89.58.34.244"
 }
 
 # TLS hardening
 
-resource "desec_rrset" "byte_surf--CAA" {
-  domain  = "byte.surf"
-  subname = ""
+resource "cloudflare_record" "byte_surf--CAA" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "@"
   type    = "CAA"
-  ttl     = 3600
-  records = ["0 issue \"letsencrypt.org\""]
+  data {
+    flags = "0"
+    tag   = "issue"
+    value = "letsencrypt.org"
+  }
 }
 
 # Email - Sendinblue
 
-resource "desec_rrset" "byte_surf--TXT" {
-  domain  = "byte.surf"
-  subname = ""
+resource "cloudflare_record" "byte_surf--TXT_SPF" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "@"
   type    = "TXT"
-  ttl     = 3600
-  records = [
-    "v=spf1 include:spf.sendinblue.com mx -all",
-    "sendinblue-code:deaab76cc107c5de8cad5f956450eb6b"
-  ]
+  value   = "v=spf1 include:spf.sendinblue.com mx -all"
 }
 
-resource "desec_rrset" "byte_surf-dmarc-TXT" {
-  domain  = "byte.surf"
-  subname = "_dmarc"
+resource "cloudflare_record" "byte_surf--TXT_sendinblue_code" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "@"
   type    = "TXT"
-  ttl     = 3600
-  records = ["v=DMARC1; p=reject;"]
+  value   = "sendinblue-code:deaab76cc107c5de8cad5f956450eb6b"
 }
 
-resource "desec_rrset" "byte_surf-mail_domainkey-TXT" {
-  domain  = "byte.surf"
-  subname = "mail._domainkey"
+resource "cloudflare_record" "byte_surf-dmarc-TXT" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "_dmarc"
   type    = "TXT"
-  ttl     = 3600
-  records = ["k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDeMVIzrCa3T14JsNY0IRv5/2V1/v2itlviLQBwXsa7shBD6TrBkswsFUToPyMRWC9tbR/5ey0nRBH0ZVxp+lsmTxid2Y2z+FApQ6ra2VsXfbJP3HE6wAO0YTVEJt1TmeczhEd2Jiz/fcabIISgXEdSpTYJhb0ct0VJRxcg4c8c7wIDAQAB"]
+  value   = "v=DMARC1; p=reject;"
+}
+
+resource "cloudflare_record" "byte_surf-mail_domainkey-TXT" {
+  zone_id = data.cloudflare_zone.byte_surf.id
+  name    = "mail._domainkey"
+  type    = "TXT"
+  value   = "k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDeMVIzrCa3T14JsNY0IRv5/2V1/v2itlviLQBwXsa7shBD6TrBkswsFUToPyMRWC9tbR/5ey0nRBH0ZVxp+lsmTxid2Y2z+FApQ6ra2VsXfbJP3HE6wAO0YTVEJt1TmeczhEd2Jiz/fcabIISgXEdSpTYJhb0ct0VJRxcg4c8c7wIDAQAB"
 }
