@@ -1,0 +1,25 @@
+From 711bb1d3e591c8eb6e8cebb41f6dd6569bca9cd2 Mon Sep 17 00:00:00 2001
+From: Sofi <sofi+git@mailbox.org>
+Date: Thu, 25 May 2023 13:05:16 +0200
+Subject: [PATCH 2/2] Disable warning as errors
+
+---
+ LDAP-Auth/LDAP-Auth.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/LDAP-Auth/LDAP-Auth.csproj b/LDAP-Auth/LDAP-Auth.csproj
+index d2082a5..9f316a9 100644
+--- a/LDAP-Auth/LDAP-Auth.csproj
++++ b/LDAP-Auth/LDAP-Auth.csproj
+@@ -4,7 +4,7 @@
+     <TargetFramework>net6.0</TargetFramework>
+     <RootNamespace>Jellyfin.Plugin.LDAP_Auth</RootNamespace>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
++    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.40.1
+
