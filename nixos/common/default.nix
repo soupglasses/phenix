@@ -11,7 +11,7 @@
       var2="`realpath $systemConfig/{initrd,kernel,kernel-modules}`"
 
       if [[ $var1 != $var2 ]]; then
-        echo "WARN: Kernel has changed, system requires to be manually rebooted to fully apply this update!"
+        >&2 echo "WARN: Kernel has changed, system requires to be manually rebooted to fully apply this update!"
       fi
     fi
   '';
