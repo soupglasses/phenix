@@ -53,7 +53,12 @@
       nixpkgs.lib.genAttrs supportedSystems (system:
         f {
           inherit system;
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              (import ./nixos/overlays/make-nuget-source-recursive.nix)
+            ];
+          };
         });
   in {
     # -- NixOS Configurations --
