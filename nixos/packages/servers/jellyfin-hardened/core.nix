@@ -27,12 +27,12 @@ buildDotnetModule rec {
   ];
 
   projectFile = [
-    "MediaBrowser.Controller/MediaBrowser.Controller.csproj" # Jellyfin.Controller
-    "Emby.Naming/Emby.Naming.csproj" # Jellyfin.Naming
     "MediaBrowser.Common/MediaBrowser.Common.csproj" # Jellyfin.Common
-    "MediaBrowser.Model/MediaBrowser.Model.csproj" # Jellyfin.Model
+    "MediaBrowser.Controller/MediaBrowser.Controller.csproj" # Jellyfin.Controller
     "Jellyfin.Data/Jellyfin.Data.csproj" # Jellyfin.Data
     "src/Jellyfin.Extensions/Jellyfin.Extensions.csproj" # Jellyfin.Extensions
+    "MediaBrowser.Model/MediaBrowser.Model.csproj" # Jellyfin.Model
+    "Emby.Naming/Emby.Naming.csproj" # Jellyfin.Naming
   ];
 
   nugetDeps = ./nuget-deps.nix;
