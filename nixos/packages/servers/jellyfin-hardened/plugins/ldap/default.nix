@@ -4,26 +4,30 @@
   fetchFromGitHub,
   jellyfin-core,
 }:
-buildDotnetModule {
+buildDotnetModule rec {
   pname = "jellyfin-plugin-ldapauth";
-  version = "16";
+  version = "17";
 
   src = fetchFromGitHub {
     owner = "jellyfin";
     repo = "jellyfin-plugin-ldapauth";
-    rev = "3a5b07b4d393798170d460f776b3f515cc1a5f86";
-    hash = "sha256-bM2sn77mIavUSk7dhgr6le6CX0HbTpTM9KR6EVohbw8=";
+    rev = "v${version}";
+    hash = "sha256-jOhINvR6o/RtqMQ7gkUgXVQgcqlz0SasOKIxGho7qls=";
   };
 
   patches = [
-    ./0001-use-new-ChangePassword-interface.patch
+    ./0001-Use-new-changePassword-interface.patch
+    ./0002-Disable-warning-as-errors.patch
   ];
 
-  projectFile = "LDAP-Auth.sln";
+  projectFile = "LDAP-Auth/LDAP-Auth.csproj";
   nugetDeps = ./nuget-deps.nix;
   packNupkg = false;
 
-  projectReferences = [jellyfin-core];
+  projectReferences = [
+    jellyfin-core
+    jellyfin-core.nuget-source
+  ];
 
   dotnet-sdk = dotnetCorePackages.sdk_6_0;
   dotnet-runtime = dotnetCorePackages.aspnetcore_6_0;

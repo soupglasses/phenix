@@ -63,8 +63,8 @@
   })
   (fetchNuGet {
     pname = "Microsoft.Extensions.Logging.Abstractions";
-    version = "6.0.2";
-    sha256 = "1wv54f3p3r2zj1pr9a6z8zqrh2ihm6v6qcw2pjwis1lcc0qb472m";
+    version = "6.0.1";
+    sha256 = "17w4x7iakwpn7crg4yk5qkkv5gkx0lfl6anwwhb1554pwak5cwdz";
   })
   (fetchNuGet {
     pname = "Microsoft.Extensions.Options";
@@ -158,8 +158,8 @@
   })
   (fetchNuGet {
     pname = "System.Text.Json";
-    version = "6.0.6";
-    sha256 = "0bkfrnr9618brbl1gvhyqrf5720syawf9dvpk8xfvkxbg7imlpjx";
+    version = "6.0.5";
+    sha256 = "12fg196sdq3gcjcz365kypfkkmdrprpcw2fvjnww9jqa4yn8v99l";
   })
   (fetchNuGet {
     pname = "System.Threading.Tasks.Dataflow";
