@@ -35,6 +35,10 @@
     after = ["minecraft-server.service"];
   };
 
+  systemd.services.minecraft-server.environment = {
+    LD_PRELOAD = "${pkgs.jemalloc}/lib/libjemalloc.so";
+  };
+
   services.minecraft-server = {
     enable = true;
     declarative = false;
@@ -43,6 +47,7 @@
     openFirewall = true;
     package = pkgs.fabricServers.fabric-1_19_4;
     jvmOpts = builtins.concatStringsSep " " [
+      "-Xlog:gc*:logs/gc.log:time,uptime:filecount=5,filesize=1M"
       "-XX:+UnlockExperimentalVMOptions"
       "-XX:+UseShenandoahGC"
       "-XX:ShenandoahGCMode=iu"
