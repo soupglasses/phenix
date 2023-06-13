@@ -1,7 +1,7 @@
 {
   description = "Phenix infrastructure";
 
-  nixConfig.allow-import-from-derivation = false;
+  #nixConfig.allow-import-from-derivation = false;
   nixConfig.extra-substituters = "https://cache.garnix.io";
   nixConfig.extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
 
@@ -52,12 +52,17 @@
       nixpkgs.lib.genAttrs supportedSystems (system:
         f {
           inherit system;
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [
-              (import ./nixos/overlays/make-nuget-source-recursive.nix)
-            ];
-          };
+          pkgs =
+            import ((import nixpkgs {inherit system;}).applyPatches {
+              name = "nixpkgs-patched";
+              src = nixpkgs;
+              patches = [./nixos/patches/php-add-new-builder.patch];
+            }) {
+              inherit system;
+              overlays = [
+                (import ./nixos/overlays/make-nuget-source-recursive.nix)
+              ];
+            };
         });
   in {
     # -- NixOS Configurations --
