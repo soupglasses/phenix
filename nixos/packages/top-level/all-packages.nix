@@ -34,3 +34,6 @@ rec {
 
   jellyfin-web = pkgs.callPackage ../servers/jellyfin-hardened/web.nix {};
 }
+// {
+  kbin-core = pkgs.callPackage ../servers/kbin-core {};
+}
