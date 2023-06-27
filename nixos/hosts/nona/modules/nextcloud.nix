@@ -48,7 +48,7 @@
   };
 
   services.nextcloud = {
-    package = pkgs.nextcloud26;
+    package = pkgs.nextcloud27;
     enable = true;
     hostName = "cloud.byte.surf";
     https = true;
