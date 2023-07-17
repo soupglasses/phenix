@@ -14,6 +14,7 @@
     sopsFile = ../secrets/ldap.yaml;
   };
 
+  boot.kernel.sysctl."vm.overcommit_memory" = 1;
   services.redis.servers.nextcloud = {
     enable = true;
     user = "nextcloud";
