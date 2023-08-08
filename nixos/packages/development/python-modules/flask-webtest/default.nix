@@ -5,13 +5,13 @@
 }:
 python3Packages.buildPythonPackage rec {
   pname = "flask-webtest";
-  version = "0.1.1";
+  version = "0.1.3";
 
   src = fetchFromGitHub {
     owner = "aromanovich";
     repo = "flask-webtest";
     rev = "${version}";
-    sha256 = "sha256-jOrH6pfQNcgg6JpGm+Rrvfw8eX/T0IP3H1z0+GU/XKs=";
+    sha256 = "sha256-Yih+7cGgK9s41Z5b2FDtqgs5FZhfnXFzw20/vOeRp2o=";
   };
 
   propagatedBuildInputs = with python3Packages; [
