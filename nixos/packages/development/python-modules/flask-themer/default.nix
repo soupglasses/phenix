@@ -5,13 +5,13 @@
 }:
 python3Packages.buildPythonPackage rec {
   pname = "flask-themer";
-  version = "1.4.3";
+  version = "2.0.0";
 
   src = fetchFromGitHub {
     owner = "TkTech";
     repo = "flask-themer";
     rev = "v${version}";
-    sha256 = "sha256-K2y0Ivy5eb8BV8Lb49Fng2X3gkF1jXbQus5lzhfd4bk=";
+    sha256 = "sha256-2Zw+gKKN0kfjYuruuLQ+3dIFF0X07DTy0Ypc22Ih66w=";
   };
 
   propagatedBuildInputs = with python3Packages; [
