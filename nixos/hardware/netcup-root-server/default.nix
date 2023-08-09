@@ -4,19 +4,15 @@
   ...
 }: {
   imports = [
-    # Optimizations related to QEMU through virtio drivers.
-    (modulesPath + "/profiles/qemu-guest.nix")
+    "${modulesPath}/profiles/qemu-guest.nix"
   ];
 
+  # TODO: Unsure if these are needed. Its a KVM machine.
   boot.initrd.availableKernelModules = [
     # Intel PATA/SATA controllers
     "ata_piix"
     # Universal Host Controller Interface
     "uhci_hcd"
-    # Virtio Virtual PCI Device
-    "virtio_pci"
-    # Virtio SCSI HBA driver
-    "virtio_scsi"
     # SCSI Disk Driver
     "sd_mod"
     # SCSI CD_ROM Driver
@@ -36,6 +32,12 @@
     autoResize = true;
   };
 
+  # Use systemd-networkd for networking instead of the default
+  # bash script based approach.
+  networking.useDHCP = false;
+  networking.useNetworkd = true;
+
   # Attempt to get hostname by DHCP.
+  # TODO: Unsure if NetCup announces a DHCP name.
   networking.hostName = lib.mkDefault "";
 }

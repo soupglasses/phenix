@@ -5,8 +5,8 @@
 }: {
   imports = [
     # Server configuration
-    ../../common/default.nix
-    ../../common/hardware/qemu.nix
+    ../../common
+    ../../hardware/netcup-root-server
     # Base configuration
     ./modules/base/acme.nix
     ./modules/base/nginx.nix # requires: base/acme.nix
