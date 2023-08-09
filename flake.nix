@@ -53,7 +53,40 @@
           inherit system;
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [];
+            overlays = [
+              # Required for canaille. https://nixpk.gs/pr-tracker.html?pr=246548
+              (final: prev: {
+                openldap = prev.openldap.overrideAttrs rec {
+                  version = "2.6.6";
+                  src = builtins.fetchurl {
+                    url = "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${version}.tgz";
+                    sha256 = "sha256-CC6ZjPVCmE1DY0RC2+EdqGB1nlEJBxUupXm9xC/jnqA=";
+                  };
+                  doCheck = false;
+                };
+                python3 = prev.python3.override {
+                  packageOverrides = _python-final: python-prev: {
+                    python-ldap = python-prev.python-ldap.overrideAttrs {
+                      src = final.fetchFromGitHub {
+                        owner = "python-ldap";
+                        repo = "python-ldap";
+                        rev = "72c1b5e0f37f74b1a68e67b6b5712d395d577bb9";
+                        hash = "sha256-N0N6XNhJZSkqeMPWqcf7nbBCpchK/LpDklobt0n4imY=";
+                      };
+                    };
+                    authlib = python-prev.authlib.overrideAttrs rec {
+                      version = "1.2.1";
+                      src = final.fetchFromGitHub {
+                        owner = "lepture";
+                        repo = "authlib";
+                        rev = "refs/tags/v${version}";
+                        hash = "sha256-K6u590poZ9C3Uzi3a8k8aXMeSeRgn91e+p2PWYno3Y8=";
+                      };
+                    };
+                  };
+                };
+              })
+            ];
           };
         });
   in {

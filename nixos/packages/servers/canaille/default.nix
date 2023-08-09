@@ -12,19 +12,15 @@
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "canaille";
-  version = "0.0.25";
+  version = "0.0.29";
   format = "pyproject";
 
   src = fetchFromGitLab {
     owner = "yaal";
     repo = "canaille";
     rev = "${version}";
-    sha256 = "sha256-SPp1Ks3YWfmamIHOHM4hVc5zBjwhFtX2tECXasvvWqQ=";
+    sha256 = "sha256-987MFgIO1F9NLlZnAMIuORBvUAoKmy8RDM6cUdP9KYE=";
   };
-
-  patches = [
-    ./0001-wip-allow-_file-extention-on-config-keys.patch
-  ];
 
   postPatch = ''
     substituteInPlace pyproject.toml \
@@ -33,6 +29,7 @@ python3.pkgs.buildPythonApplication rec {
 
   nativeBuildInputs = with python3.pkgs; [
     poetry-core
+    babel
   ];
 
   nativeCheckInputs = with python3.pkgs; [
@@ -44,7 +41,10 @@ python3.pkgs.buildPythonApplication rec {
     openldap
     pytest
     pytest-cov
+    pytest-flask
     pytest-httpserver
+    pytest-lazy-fixture
+    pytest-xdist
     pytestCheckHook
     pyquery
     slapd
@@ -65,6 +65,9 @@ python3.pkgs.buildPythonApplication rec {
     toml
     wtforms
   ];
+
+  # Excessively flakey tests: https://gitlab.com/yaal/canaille/-/issues/165
+  doCheck = false;
 
   preCheck = ''
     # Needed by tests to setup a mockup ldap server.
