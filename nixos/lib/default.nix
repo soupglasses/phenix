@@ -1,3 +1,3 @@
-{
-  mkSystem = import ./mkSystem.nix;
+{lib}: {
+  mkSystem = import ./mkSystem.nix {inherit lib;};
 }

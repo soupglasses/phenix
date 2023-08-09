@@ -7,14 +7,17 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    # Packages
+
+    # Extra packages
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
     nix-minecraft.inputs.flake-utils.follows = "flake-utils";
+
     # Secret management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs";
+
     # Formatting
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
@@ -23,9 +26,11 @@
     pre-commit-hooks.inputs.flake-utils.follows = "flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     # Utils
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+
     # Compatibility
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
@@ -42,11 +47,17 @@
     devshell,
     ...
   }: let
+    # List of system architectures that we want our flake binary outputs to support,
+    # for example `outputs.packages` and `outputs.devshells`.
+    # Note, this does not define architectures for the `nixosConfigurations`.
     supportedSystems = [
       "aarch64-linux"
       "x86_64-linux"
     ];
 
+    # Outputs a set of attrsets with each supported system architecture as keys.
+    # Inputs common `pkgs` and `system` attributes for use by the caller.
+    # This makes supporting multiple system-architectures easy.
     eachSystem = f:
       nixpkgs.lib.genAttrs supportedSystems (system:
         f {
@@ -54,38 +65,7 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
-              # Required for canaille. https://nixpk.gs/pr-tracker.html?pr=246548
-              (final: prev: {
-                openldap = prev.openldap.overrideAttrs rec {
-                  version = "2.6.6";
-                  src = builtins.fetchurl {
-                    url = "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${version}.tgz";
-                    sha256 = "sha256-CC6ZjPVCmE1DY0RC2+EdqGB1nlEJBxUupXm9xC/jnqA=";
-                  };
-                  doCheck = false;
-                };
-                python3 = prev.python3.override {
-                  packageOverrides = _python-final: python-prev: {
-                    python-ldap = python-prev.python-ldap.overrideAttrs {
-                      src = final.fetchFromGitHub {
-                        owner = "python-ldap";
-                        repo = "python-ldap";
-                        rev = "72c1b5e0f37f74b1a68e67b6b5712d395d577bb9";
-                        hash = "sha256-N0N6XNhJZSkqeMPWqcf7nbBCpchK/LpDklobt0n4imY=";
-                      };
-                    };
-                    authlib = python-prev.authlib.overrideAttrs rec {
-                      version = "1.2.1";
-                      src = final.fetchFromGitHub {
-                        owner = "lepture";
-                        repo = "authlib";
-                        rev = "refs/tags/v${version}";
-                        hash = "sha256-K6u590poZ9C3Uzi3a8k8aXMeSeRgn91e+p2PWYno3Y8=";
-                      };
-                    };
-                  };
-                };
-              })
+              self.overlays.canaille-support
             ];
           };
         });
@@ -96,16 +76,14 @@
     nixosConfigurations = {
       nona = self.lib.mkSystem self {
         system = "x86_64-linux";
-        imports = [
-          sops-nix.nixosModules.sops
-          self.nixosModules.bad-python-server
-        ];
         overlays = [
           nix-minecraft.overlay
           self.overlays.packages
           self.overlays.prometheus-systemd-exporter
         ];
         modules = [
+          sops-nix.nixosModules.sops
+          self.nixosModules.bad-python-server
           ./nixos/hosts/nona
         ];
       };
@@ -127,7 +105,7 @@
     # -- Library --
     # Holds our various functions and derivations aiding in deploying nixos.
 
-    lib = import ./nixos/lib/default.nix // eachSystem ({pkgs, ...}: import ./nixos/lib/with-pkgs.nix pkgs);
+    lib = import ./nixos/lib {inherit (nixpkgs) lib;};
 
     # -- Overlays --
     # Allows modification of nixpkgs in-place, adding and modifying its functionality.
@@ -140,6 +118,7 @@
       };
       prometheus-systemd-exporter = import ./nixos/overlays/prometheus-systemd-exporter.nix;
       tt-rss-plugin-auth-ldap = import ./nixos/overlays/tt-rss-plugin-auth-ldap.nix;
+      canaille-support = import ./nixos/overlays/canaille-support.nix;
     };
 
     # -- Formatter --
@@ -164,11 +143,12 @@
         devshell = {
           startup = {
             motd = nixpkgs.lib.mkForce {text = "";};
-            pre-commit-check = {text = self.checks.${system}.pre-commit-check.shellHook;};
+            pre-commit = {text = self.checks.${system}.pre-commit.shellHook;};
           };
           packages = with pkgs; [
             nixUnstable
             # Deployment
+            nixos-rebuild
             terraform
             # Secrets management
             age
@@ -176,6 +156,7 @@
             sops
             # Formatters
             alejandra
+            deadnix
           ];
         };
       };
@@ -188,7 +169,7 @@
       system,
       pkgs,
     }: {
-      pre-commit-check = pre-commit-hooks.lib.${system}.run {
+      pre-commit = pre-commit-hooks.lib.${system}.run {
         src = ./.;
         excludes = ["-deps.nix$" "-composition.nix$" ".patch$"];
         hooks = {
