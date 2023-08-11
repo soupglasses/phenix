@@ -129,7 +129,6 @@
         projectRootFile = "flake.nix";
         programs.alejandra.enable = true;
         programs.deadnix.enable = true;
-        programs.terraform.enable = true;
       });
 
     # -- Development Shells --
@@ -149,7 +148,6 @@
             nixUnstable
             # Deployment
             nixos-rebuild
-            terraform
             # Secrets management
             age
             ssh-to-age
