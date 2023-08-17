@@ -112,7 +112,6 @@
           (import ./nixos/packages/top-level/all-packages.nix {inherit (final) pkgs;});
       };
       prometheus-systemd-exporter = import ./nixos/overlays/prometheus-systemd-exporter.nix;
-      tt-rss-plugin-auth-ldap = import ./nixos/overlays/tt-rss-plugin-auth-ldap.nix;
     };
 
     # -- Formatter --
