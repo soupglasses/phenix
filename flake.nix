@@ -62,12 +62,7 @@
       nixpkgs.lib.genAttrs supportedSystems (system:
         f {
           inherit system;
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [
-              self.overlays.canaille-support
-            ];
-          };
+          pkgs = nixpkgs.legacyPackages.${system};
         });
   in {
     # -- NixOS Configurations --
@@ -118,7 +113,6 @@
       };
       prometheus-systemd-exporter = import ./nixos/overlays/prometheus-systemd-exporter.nix;
       tt-rss-plugin-auth-ldap = import ./nixos/overlays/tt-rss-plugin-auth-ldap.nix;
-      canaille-support = import ./nixos/overlays/canaille-support.nix;
     };
 
     # -- Formatter --
