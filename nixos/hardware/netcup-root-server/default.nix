@@ -35,7 +35,6 @@
   systemd.network.networks."10-wan" = {
     matchConfig.Name = "ens3";
     networkConfig.DHCP = "ipv4";
-    networkConfig.IPv6AcceptRA = true;
     linkConfig.RequiredForOnline = "yes";
   };
 

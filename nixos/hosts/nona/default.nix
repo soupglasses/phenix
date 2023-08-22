@@ -28,6 +28,11 @@
   networking.hostName = "nona";
   networking.domain = "hosts.byte.surf";
 
+  systemd.network.networks."10-wan".address = [
+    "89.58.34.244/24"
+    "2a03:4000:64:d3f::/64"
+  ];
+
   networking.extraHosts = ''
     127.0.0.1 ldap.byte.surf
   '';
