@@ -5,7 +5,7 @@
 }: {
   imports = [
     # Server configuration
-    ../../common
+    ../../kinds/server
     ../../hardware/netcup-root-server
     # Base configuration
     ./modules/base/acme.nix

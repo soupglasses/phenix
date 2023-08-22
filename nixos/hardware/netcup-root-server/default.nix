@@ -22,7 +22,7 @@
   # Just reboot when hitting a panic.
   boot.kernelParams = ["panic=1" "boot.panic_on_fail"];
 
-  boot.loader.timeout = 1;
+  boot.loader.timeout = 5;
   boot.growPartition = true;
   boot.loader.grub.device = "/dev/sda";
 
@@ -32,10 +32,12 @@
     autoResize = true;
   };
 
-  # Use systemd-networkd for networking instead of the default
-  # bash script based approach.
-  networking.useDHCP = false;
-  networking.useNetworkd = true;
+  systemd.network.networks."10-wan" = {
+    matchConfig.Name = "ens3";
+    networkConfig.DHCP = "ipv4";
+    networkConfig.IPv6AcceptRA = true;
+    linkConfig.RequiredForOnline = "yes";
+  };
 
   # Attempt to get hostname by DHCP.
   # TODO: Unsure if NetCup announces a DHCP name.
