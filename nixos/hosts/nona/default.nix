@@ -23,8 +23,6 @@
     ./modules/minecraft.nix
   ];
 
-  services.phenix.bad-python-server.enable = true;
-
   networking.hostName = "nona";
   networking.domain = "hosts.byte.surf";
 

@@ -78,7 +78,6 @@
         ];
         modules = [
           sops-nix.nixosModules.sops
-          self.nixosModules.bad-python-server
           ./nixos/hosts/nona
         ];
       };
