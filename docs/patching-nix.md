@@ -1,6 +1,12 @@
-# Patching NixOS Modules by Overlay
+# Patching
 
-I will use the nixos module `minecraft-server.nix` for my example for how to write an overlay.
+## Patching NixOS Packages by overlay
+
+Todo.
+
+## Patching NixOS Modules by Import
+
+I will use the nixos module `minecraft-server.nix` for my example.
 
 First step is to create the actual module with your modification.
 

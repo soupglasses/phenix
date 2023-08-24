@@ -13,6 +13,10 @@
 
 This repository contains the infrastructure as code for Phenix, my personal infrastructue.
 
+- [Getting Started](./docs/getting-started.md)
+- [Contributing Guidelines](./CONTRIBUTING.md)
+- [Documentation](./docs/)
+
 ## Deployment
 
 ```bash
@@ -21,9 +25,7 @@ $ nix develop
 $ nixos-rebuild switch --fast --use-remote-sudo --target-host [user]@[hostname] --flake .#host
 ```
 
-## Contributing
-
-Read [CONTRIBUTING.md](./CONTRIBUTING.md)
+## Verification
 
 ```bash
 $ nix fmt .
