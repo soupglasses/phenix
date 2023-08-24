@@ -1,6 +1,8 @@
-# Custom folders
-/.direnv
-/.pre-commit-config.yaml
+# Direnv holds its local state in this folder
+.direnv
+
+# Precommit is managed through Nix, do not check in local version into git
+.pre-commit-config.yaml
 
 # -- Nix.gitignore --
 
