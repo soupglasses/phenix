@@ -1,14 +1,12 @@
 keys:
   - &admin_sofi age1truyztzf0s5vq6r7cja84d9690l6q88cvlqqm6lpz3t7f7tkgdgqugqqtr
   - &server_nona age1ak8zjpcdgrup9yup79z0zc55qz7fqcmu54k7fl9xa2z8wxjcepgs5lh8er
-  - &terraform_cloud age1h2l04shn47rrqhgndvut9uyr43zdd2cvdmw7qa64qeca4x2cg5gqfmkp8r
 creation_rules:
   - path_regex: secrets/[^/]+\.yaml$
     key_groups:
       - age:
         - *admin_sofi
         - *server_nona
-        - *terraform_cloud
   - path_regex: nixos/hosts/nona/secrets/[^/]+\.yaml$
     key_groups:
       - age:
