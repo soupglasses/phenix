@@ -4,7 +4,6 @@
     {
       add_newline = false;
       format = "$directory$all$character";
-      username.disabled = true;
       hostname = {
         format = "([@$hostname]($style) )";
         style = "green";
@@ -50,7 +49,16 @@
         command = ''printf "''${VIRTUAL_ENV:+"venv"}"'';
         description = "Shows when you are in a virtual environment";
         format = "([$output](purple) )";
-        when = "true";
+        when = true;
+        shell = "bash";
+        disabled = false;
+      };
+      username.disabled = true;
+      custom.root = {
+        command = ''whoami | grep -q "root" && printf "root"'';
+        description = "Shows when you are a root user";
+        format = "([$output](bright-red) )";
+        when = true;
         shell = "bash";
         disabled = false;
       };
