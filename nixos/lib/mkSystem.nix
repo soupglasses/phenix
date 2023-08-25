@@ -14,6 +14,7 @@
     patches ? [],
     modules ? [],
     overlays ? [],
+    extraArgs ? {},
   }: let
     nixpkgs' =
       if patches != []
@@ -35,6 +36,9 @@
         modules
         ++ [
           {
+            # I am not sure why `extraArgs` got deprecated for `_module.args`.
+            _module.args = extraArgs;
+
             # TODO: Rework this into a module using allowUnfreePredicate.
             nixpkgs.config.allowUnfree = true;
 
