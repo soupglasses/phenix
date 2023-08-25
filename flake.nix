@@ -78,6 +78,7 @@
         ];
         modules = [
           sops-nix.nixosModules.sops
+          ./nixos/mixins/starship.nix
           ./nixos/hosts/nona
         ];
       };
