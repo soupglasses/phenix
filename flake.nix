@@ -93,7 +93,7 @@
     };
 
     # -- Packages --
-    # Exposes our packages as a flake output so others can use them.
+    # Exposes derivations as top level packages so others can use them.
 
     packages = eachSystem ({pkgs, ...}: import ./nixos/packages/top-level/all-packages.nix {inherit pkgs;});
 
@@ -115,7 +115,7 @@
     };
 
     # -- Formatter --
-    # Abstracts all formatting tools into one command, `nix fmt`.
+    # Abstracts all formatting tools into one command, `nix fmt <location>`.
 
     formatter = eachSystem ({pkgs, ...}:
       treefmt-nix.lib.mkWrapper pkgs {
@@ -125,7 +125,7 @@
       });
 
     # -- Development Shells --
-    # Virtual shells holding packages and shellhooks aiding development.
+    # Scoped environments including packages and shell-hooks to aid project development.
 
     devShells = eachSystem ({
       system,
@@ -154,7 +154,7 @@
     });
 
     # -- Tests --
-    # Verify locally that nixos configurations and file formatting is correct.
+    # Verify locally that our nix configurations and file formatting is correct.
 
     checks = eachSystem ({
       system,
