@@ -1,4 +1,9 @@
-{lib, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
+  environment.systemPackages = [pkgs.starship];
   programs.starship.enable = true;
   programs.starship.settings = builtins.foldl' lib.recursiveUpdate {} [
     {
