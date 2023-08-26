@@ -28,9 +28,6 @@
   # Do not require a password for sudo for users in the wheel group.
   security.sudo.wheelNeedsPassword = false;
 
-  # Disable cached sudo warning from starship, since sudo is always available on servers.
-  programs.starship.settings.sudo.disabled = lib.mkForce true;
-
   # Enable SSH to allow remote control.
   services.openssh.enable = true;
   services.openssh.openFirewall = true;

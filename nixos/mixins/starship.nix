@@ -54,18 +54,21 @@
         disabled = false;
       };
       username.disabled = true;
-      custom.root = {
-        command = ''whoami | grep -q "root" && printf "root"'';
-        description = "Shows when you are a root user";
+      sudo.disabled = true;
+      custom.sudo = {
+        command = ''printf "sudo"'';
+        description = "Shows when you have sudo, ignoring the root user and ssh connections.";
         format = "([$output](bright-red) )";
-        when = true;
+        when = ''[[ -z "$SSH_CONNECTION$SSH_CLIENT$SSH_TTY" ]] && [[ `whoami` != "root" ]] && sudo -n true'';
         shell = "bash";
         disabled = false;
       };
-      sudo = {
-        format = "[$symbol]($style) ";
-        style = "bright-red";
-        symbol = "sudo";
+      custom.root = {
+        command = ''printf "root"'';
+        description = "Shows when you are the root user";
+        format = "([$output](bright-red) )";
+        when = ''[[ `whoami` == "root" ]]'';
+        shell = "bash";
         disabled = false;
       };
       cmd_duration = {
