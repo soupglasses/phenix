@@ -1,6 +1,6 @@
 {lib, ...}: {
   imports = [
-    ../../common
+    ../common
   ];
 
   # Internationaliation.

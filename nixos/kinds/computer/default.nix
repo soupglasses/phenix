@@ -1,6 +1,6 @@
 {
   imports = [
-    ../../common
+    ../common
   ];
 
   # Very much TODO.
