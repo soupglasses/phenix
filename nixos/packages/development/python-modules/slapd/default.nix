@@ -19,6 +19,7 @@ python3Packages.buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace pyproject.toml \
+      --replace "poetry>=1.0.0" "poetry-core" \
       --replace "poetry.masonry.api" "poetry.core.masonry.api"
   '';
 
