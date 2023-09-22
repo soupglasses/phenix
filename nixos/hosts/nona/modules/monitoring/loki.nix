@@ -1,6 +1,6 @@
 {...}: {
   services.loki = {
-    enable = true;
+    enable = false; # error initialising module: compactor, invalid ring lifecycler config
     configuration = {
       target = "all";
       auth_enabled = false;
