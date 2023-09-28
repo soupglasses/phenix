@@ -50,5 +50,6 @@
     pkgs.rsync
   ];
 
+  boot.swraid.enable = false; # Badly implemented fallback enable, fixed in stateVersion 23.11.
   system.stateVersion = "22.05"; # Initially installed version. DO NOT TOUCH!
 }
