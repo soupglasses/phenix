@@ -43,7 +43,7 @@
   users.users."root" = {
     password = null;
     initialHashedPassword = null;
-    passwordFile = config.sops.secrets."root/password".path;
+    hashedPasswordFile = config.sops.secrets."root/password".path;
   };
 
   environment.systemPackages = [
