@@ -6,7 +6,8 @@
   nixConfig.extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/bc571a7386d20d50f6a6a71c66598695237afacb";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
     # Extra packages
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
@@ -40,6 +41,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-unstable,
     nix-minecraft,
     sops-nix,
     pre-commit-hooks,
@@ -80,6 +82,9 @@
           sops-nix.nixosModules.sops
           ./nixos/mixins/starship.nix
           ./nixos/hosts/nona
+          {
+            services.nextcloud.package = nixpkgs.lib.mkForce nixpkgs-unstable.legacyPackages."x86_64-linux".nextcloud27;
+          }
         ];
       };
     };

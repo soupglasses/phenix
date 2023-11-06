@@ -127,6 +127,21 @@
       },
       "original": {
         "id": "nixpkgs",
+        "rev": "bc571a7386d20d50f6a6a71c66598695237afacb",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1699099776,
+        "narHash": "sha256-X09iKJ27mGsGambGfkKzqvw5esP1L/Rf8H3u3fCqIiU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "85f1ba3e51676fa8cc604a3d863d729026a6b8eb",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
         "ref": "nixos-unstable",
         "type": "indirect"
       }
@@ -168,6 +183,7 @@
         "flake-utils": "flake-utils",
         "nix-minecraft": "nix-minecraft",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "pre-commit-hooks": "pre-commit-hooks",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix"
