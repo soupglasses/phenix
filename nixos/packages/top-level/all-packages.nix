@@ -26,11 +26,11 @@ rec {
     inherit jellyfin-web;
   };
 
-  jellyfin-core = pkgs.callPackage ../servers/jellyfin-hardened/core.nix {};
+  #  jellyfin-core = pkgs.callPackage ../servers/jellyfin-hardened/core.nix {};
 
-  jellyfin-plugin-ldap = pkgs.callPackage ../servers/jellyfin-hardened/plugins/ldap {
-    inherit jellyfin-core;
-  };
+  #  jellyfin-plugin-ldap = pkgs.callPackage ../servers/jellyfin-hardened/plugins/ldap {
+  #    inherit jellyfin-core;
+  #  };
 
   jellyfin-web = pkgs.callPackage ../servers/jellyfin-hardened/web.nix {};
 }
