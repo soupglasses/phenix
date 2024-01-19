@@ -8,6 +8,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/bc571a7386d20d50f6a6a71c66598695237afacb";
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    systems.url = "github:nix-systems/default-linux";
 
     # Extra packages
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
@@ -42,6 +43,7 @@
     self,
     nixpkgs,
     nixpkgs-unstable,
+    systems,
     nix-minecraft,
     sops-nix,
     pre-commit-hooks,
@@ -49,19 +51,11 @@
     devshell,
     ...
   }: let
-    # List of system architectures that we want our flake binary outputs to support,
-    # for example `outputs.packages` and `outputs.devshells`.
-    # Note, this does not define architectures for the `nixosConfigurations`.
-    supportedSystems = [
-      "aarch64-linux"
-      "x86_64-linux"
-    ];
-
     # Outputs a set of attrsets with each supported system architecture as keys.
     # Inputs common `pkgs` and `system` attributes for use by the caller.
     # This makes supporting multiple system-architectures easy.
     eachSystem = f:
-      nixpkgs.lib.genAttrs supportedSystems (system:
+      nixpkgs.lib.genAttrs (import systems) (system:
         f {
           inherit system;
           pkgs = nixpkgs.legacyPackages.${system};

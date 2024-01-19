@@ -37,6 +37,8 @@ $ nix flake check
 
 Secrets: [sops-nix](https://github.com/Mic92/sops-nix)
 
+System Support: [nix-systems](https://github.com/nix-systems/nix-systems)
+
 Packaging and dependency management: [nix-flakes](https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-flake.html)
 
 ## Hosts
